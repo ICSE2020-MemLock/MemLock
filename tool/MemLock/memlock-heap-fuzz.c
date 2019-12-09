@@ -30,6 +30,9 @@
 #define _GNU_SOURCE
 #define _FILE_OFFSET_BITS 64
 
+// wcventure added (wcventure)
+#define TopMemNum 24
+
 #include "config.h"
 #include "types.h"
 #include "debug.h"
@@ -169,6 +172,7 @@ static volatile u8 stop_soon,         /* Ctrl-C pressed?                  */
                    child_timed_out;   /* Traced process timed out?        */
 
 EXP_ST u32 queued_paths,              /* Total number of queued testcases */
+           queued_deadNum,            /* Total dead number (wcventure)    */
            queued_variable,           /* Testcases with variable behavior */
            queued_at_start,           /* Total number of initial inputs   */
            queued_discovered,         /* Items discovered during this run */
@@ -279,12 +283,18 @@ static u64 sizeScore_cur = 0;         /* Added: cur sizeScore (wcventure) */
 static u64 MaxMalloc = 0;             /* Added: from file     (wcventure) */
 static u64 sizeScore_max = 0;         /* Added: from file     (wcventure) */
 
+static struct queue_entry *queue_dead = NULL; /* dead queue (wcventure)   */
+
 static struct queue_entry *queue,     /* Fuzzing queue (linked list)      */
                           *queue_cur, /* Current offset within the queue  */
+						  *queue_pre, /* Before current offset            */
                           *queue_top, /* Top of the list                  */
                           *q_prev100; /* Previous 100 marker              */
 
 static struct queue_entry** top_rated;/* Top entries for bitmap bytes     */
+
+static struct queue_entry*
+  top_mem[TopMemNum];                 /* Add: Top 64 memory (wcventure)   */
 
 struct extra_data {
   u8* data;                           /* Dictionary token data            */
@@ -347,16 +357,18 @@ enum {
   /* 05 */ FAULT_NOBITS
 };
 
-/* start: wcventure added in Memfuzz (wcventure)*/
+
+/* start: wcventure added in MemLock (wcventure)*/
+
 static inline u32 UR(u32 limit);
 
 struct sys_data
 {
   unsigned long long int MaxContinueCMNum;
-	unsigned long long int MaxCallNum;
-	unsigned long long int MaxAllocNum;
-	unsigned long long int TotalMallocSize;
-	unsigned long long int MayMemLeak;
+  unsigned long long int MaxCallNum;
+  unsigned long long int MaxAllocNum;
+  unsigned long long int TotalMallocSize;
+  unsigned long long int MayMemLeak;
   unsigned long long int FailAlloc;
   unsigned long long int LeakSize;
   unsigned long long int TotalMallocNum;
@@ -367,6 +379,156 @@ struct sys_data* mem_data;                /* SHM (wcventure)  */
 void ReadMemStatus(u64* a){
   *a = mem_data->TotalMallocSize;
 }
+
+// start: 如果没有has_new_bit, 找cuskm一样的，从链表中删除
+void delete_from_queue(u32 cksum){
+  struct queue_entry *de = queue;
+  if (de->next == NULL)
+    return;
+  
+  do{
+    if(de->next->exec_cksum==cksum){
+
+      if(de->next == queue_top)//找到自己了，往往是跟id000一样的，id000不可删除
+        break;
+
+      struct queue_entry *temp = de->next->next;
+      if (queue_dead == NULL){//重复的低分cksum的实例加入queue_dead
+        queue_dead = de->next;
+        de->next->was_fuzzed = 1;
+        de->next->sizeScore = -1;//因为next还不能删除，做一个标记，是否是最后一个，避免最后doublefree
+      } else {
+        //找到queue的最后一个
+        struct queue_entry *dead_tmp = queue_dead;
+        while(dead_tmp->sizeScore != -1)
+          dead_tmp = dead_tmp->next;
+        dead_tmp->sizeScore = 0;//0代表不是最后一个的标记
+        dead_tmp->next = de->next;
+        dead_tmp->next->was_fuzzed = 1;
+        dead_tmp->next->sizeScore = -1;//因为next还不能删除，做一个标记，是否是最后一个，避免最后doublefree
+      }
+      de->next = temp;
+      //queued_paths--;//path总数减一(queued_paths不能减，总数是queued_paths)
+      queued_deadNum++;//queued_deadNum计数加一
+      break;
+    }
+    de = de->next;
+  }while(de->next != NULL);
+}
+
+
+void delete_cur_from_queue(){
+
+  if (queue_pre == NULL)
+    return;
+  struct queue_entry *de = queue_pre;
+
+  if(de->next == queue_top)//找到自己了，往往是跟id000一样的，id000不可删除
+	return;
+
+  struct queue_entry *temp = de->next->next;
+  if (queue_dead == NULL){//重复的低分cksum的实例加入queue_dead
+	queue_dead = de->next;
+	de->next->was_fuzzed = 1;
+	de->next->sizeScore = -1;//因为next还不能删除，做一个标记，是否是最后一个，避免最后doublefree
+  } else {
+	//找到queue的最后一个
+	struct queue_entry *dead_tmp = queue_dead;
+	while(dead_tmp->sizeScore != -1)
+	  dead_tmp = dead_tmp->next;
+	dead_tmp->sizeScore = 0;//0代表不是最后一个的标记
+	dead_tmp->next = de->next;
+	dead_tmp->next->was_fuzzed = 1;
+	dead_tmp->next->sizeScore = -1;//因为next还不能删除，做一个标记，是否是最后一个，避免最后doublefree
+  }
+  de->next = temp;
+  queued_deadNum++;//queued_deadNum计数加一
+  
+}
+
+//判断内存消耗的得分是否有比top_mem中的高
+u32 has_higher_score(u32 cksum, int* cksumLocation, int* insertLocation) {
+  u32 i, ret = 0;
+  u32 insertflag = 0;
+  u32 cksumflag = 0;
+  for(i = 0; i < TopMemNum; i++){
+
+    //判断是否有比top_mem中更高分的seed, 如有则记录应该插入的位置
+    if (insertflag == 0)
+      if (top_mem[i]->sizeScore < sizeScore_cur){
+        insertflag = 1;
+        *insertLocation = i;
+      }
+
+    //查找队列中是否已经存在，找到存在则跳出
+    if (cksum == top_mem[i]->exec_cksum){
+      if (top_mem[i]->sizeScore < sizeScore_cur) {
+        *cksumLocation = i;
+        cksumflag = 1;
+        break;
+      }
+      else{
+        ret = 0;
+        *cksumLocation = -1;
+        *insertLocation = -1;
+        return ret;
+      }
+    }
+  }
+
+  if (cksumflag == 0 && insertflag == 1)
+    ret = 1;
+  else if (cksumflag == 1)
+    ret = 1;
+  else{
+    ret = 0;
+    *cksumLocation = -1;
+    *insertLocation = -1;
+  }
+    
+  return ret;
+}
+
+//得分更高，interesting, 插入队列
+//该队列中路径皆不同
+u32 add_to_top_mem(struct queue_entry *p, int cksumLocation, int insertLocation){
+  
+  u32 i, ret = 0;
+  
+  if (cksumLocation==-1 && insertLocation ==-1)
+    return 0;
+  else if (cksumLocation != -1){
+    if (insertLocation == cksumLocation){//位置一样直接替换
+        top_mem[insertLocation] = p;
+        return ret;
+    }
+    else{//位置不同需要排序，先删除，数据前移;
+      for(i=cksumLocation; i < TopMemNum-1; i++){
+        top_mem[i]=top_mem[i+1];
+      }
+      //所有数据后移，插入  （1）
+      for(i = TopMemNum-2; i >= insertLocation; i--){
+        top_mem[i+1]=top_mem[i];
+        if(i==0) break;//inter-overflow
+      }
+      top_mem[insertLocation] = p;
+    }
+  }
+  else if (cksumLocation == -1 && insertLocation != -1){
+    //所有数据后移，插入  同（1）
+    top_mem[TopMemNum-1]->favored = 0;
+    for(i = TopMemNum-2; i >= insertLocation; i--){
+      top_mem[i+1]=top_mem[i];
+      if(i==0) break;//inter-overflow
+    }
+    top_mem[insertLocation] = p;
+  }
+  
+  return 1;
+}
+
+
+/* end: wcventure added in MemLock*/
 
 
 void DEBUG (char const *fmt, ...) {
@@ -886,6 +1048,24 @@ EXP_ST void destroy_queue(void) {
 
   }
 
+  /* start: free the dead queue (wcventure) */
+  struct queue_entry *d = queue_dead;
+  while (d) {
+    if (d->sizeScore == -1){//已经到尾部了
+      ck_free(d->fname);
+      ck_free(d->trace_mini);
+      ck_free(d);  
+      break;
+    }
+
+    n = d->next;
+    ck_free(d->fname);
+    ck_free(d->trace_mini);
+    ck_free(d);
+    d = n;
+  }
+  /* end: free the dead queue */
+  
 }
 
 
@@ -3315,21 +3495,25 @@ static u8 save_if_interesting(char** argv, void* mem, u32 len, u8 fault) {
 
   u8  *fn = "";
   u8  hnb;
+  u8  hnm = 0;
   s32 fd;
   u8  keeping = 0, res;
+  u32 cksum = hash32(trace_bits, MAP_SIZE, HASH_CONST);
 
   if (fault == crash_mode) {
 
     /* Keep only if there are new bits in the map, add to queue for
        future fuzzing, etc. PERF: also keep if there is a new max*/
 
-    u8 hnm = 0;
-    if (max_ct_fuzzing) hnm = has_new_max(); // are there some subtleties here of when the max should be set? TODO
+    hnb = has_new_bits(virgin_bits);
+    // are there some subtleties here of when the max should be set? TODO
+	if (max_ct_fuzzing) 
+		hnm = has_new_max(); 
 
-    if (!(hnb = has_new_bits(virgin_bits)) && (!max_ct_fuzzing || !hnm)) {
+    if ((!hnb) && (!max_ct_fuzzing || !hnm)) { //(wcventure)
       if (crash_mode) total_crashes++;
       return 0;
-    }    
+    }     
    
 
 #ifndef SIMPLE_FILES
@@ -3345,7 +3529,13 @@ static u8 save_if_interesting(char** argv, void* mem, u32 len, u8 fault) {
 
     DEBUG("adding %s to queue\n", fn);
 
-    add_to_queue(fn, len, 0);
+    if (queue_cur->exec_cksum == cksum){ // (wcventure)
+		
+		add_to_queue(fn, len, 0);
+	} else {
+		delete_from_queue(cksum);
+		add_to_queue(fn, len, 0);
+	}
 
     if (hnb == 2) {
       queue_top->has_new_cov = 1;
@@ -4275,8 +4465,8 @@ static void show_stats(void) {
 
   }
 
-  SAYF(bSTG bV bSTOP "  total paths : " cRST "%-5s  " bSTG bV "\n",
-       DI(queued_paths));
+    SAYF(bSTG bV bSTOP "  total paths : " cRST "%-5s  " bSTG bV "\n",
+       DI(queued_paths-queued_deadNum)); // (wcventure)
 
   /* Highlight crashes in red if found, denote going over the KEEP_UNIQUE_CRASH
      limit with a '+' appended to the count. */
@@ -6875,12 +7065,16 @@ retry_splicing:
 
     /* Pick a random queue entry and seek to it. Don't splice with yourself. */
 
-    do { tid = UR(queued_paths); } while (tid == current_entry);
+    do { 
+	  tid = UR(queued_paths-queued_deadNum); //(wcventure) 
+	  } while (tid == current_entry);
+
 
     splicing_with = tid;
     target = queue;
 
-    while (tid >= 100) { target = target->next_100; tid -= 100; }
+    /*无奈之举，next_100已经乱了 (wcventure) */
+    //while (tid >= 100) {target = target->next_100; tid -= 100; }
     while (tid--) target = target->next;
 
     /* Make sure that the target has a reasonable length. */
@@ -8076,7 +8270,7 @@ int main(int argc, char** argv) {
   struct timeval tv;
   struct timezone tz;
 
-  SAYF(cCYA " MemLock-heap-fuzzer: afl-fuzz " cBRI VERSION cRST " by <wcventure@126.com>\n");
+  SAYF(cCYA " MemLock-heap-fuzzer: memlock-heap-fuzz " cBRI VERSION cRST " by <wcventure@126.com>\n");
 
   doc_path = access(DOC_PATH, F_OK) ? "docs" : DOC_PATH;
 
@@ -8389,6 +8583,9 @@ int main(int argc, char** argv) {
     start_time += 4000;
     if (stop_soon) goto stop_fuzzing;
   }
+  
+  queued_deadNum = 0;// (wcventure)
+  queue_pre = NULL;
 
   while (1) {
 
@@ -8445,7 +8642,8 @@ int main(int argc, char** argv) {
 
     if (stop_soon) break;
 
-    queue_cur = queue_cur->next;
+    queue_pre = queue_cur;
+	queue_cur = queue_cur->next;
     current_entry++;
 
   }

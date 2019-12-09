@@ -10,11 +10,11 @@
 
 struct sys_data
 {
-	unsigned long long int MaxContinueCMNum;
-	unsigned long long int MaxCallNum;
-	unsigned long long int MaxAllocNum;
-	unsigned long long int TotalMallocSize;
-	unsigned long long int MayMemLeak;
+  unsigned long long int MaxContinueCMNum;
+  unsigned long long int MaxCallNum;
+  unsigned long long int MaxAllocNum;
+  unsigned long long int TotalMallocSize;
+  unsigned long long int MayMemLeak;
   unsigned long long int FailAlloc;
   unsigned long long int LeakSize;
   unsigned long long int TotalMallocNum;
