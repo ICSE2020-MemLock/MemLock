@@ -1,5 +1,5 @@
 clang+llvm/
-
+tool/MemLock/build/
 tool/MemLock/afl-analyze
 tool/MemLock/afl-analyze.dSYM/
 tool/MemLock/afl-as
@@ -53,8 +53,10 @@ tool/AFL-2.52b/afl-tmin
 tool/AFL-2.52b/afl-tmin.dSYM/
 tool/AFL-2.52b/as
 tool/AFL-2.52b/test-instr.dSYM/
-
-evaluation/*/SRC/
-evaluation/*/fuzzer-out*
-*-log-*.txt
-*.lock
+tool/AFL-2.52b/afl-analyze
+tool/AFL-2.52b/afl-clang-fast
+tool/AFL-2.52b/afl-clang-fast++
+tool/AFL-2.52b/afl-llvm-pass.so
+tool/AFL-2.52b/afl-llvm-rt-64.o
+tool/AFL-2.52b/afl-llvm-rt.o
+evaluation/BUILD/*/SRC/

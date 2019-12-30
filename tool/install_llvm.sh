@@ -25,7 +25,7 @@ if [ -d "${ROOT_DIR}/tool/MemLock/LLVMlib_asan_6.0.1" ]; then
 fi
 git clone https://github.com/ICSE2020-MemLock/LLVMlib_asan.git ${ROOT_DIR}/tool/MemLock/LLVMlib_asan_6.0.1
 tar -zxvf ${ROOT_DIR}/tool/MemLock/LLVMlib_asan_6.0.1/libclang_rt.asan-x86_64.tar.gz -C ${ROOT_DIR}/tool/MemLock/LLVMlib_asan_6.0.1
-cp -rf ${ROOT_DIR}/tool/MemLock/LLVMlib_asan_6.0.1/* ${PREFIX}/clang+llvm/ua_asan/lib/clang/6.0.1/lib/linux/
+cp -rf ${ROOT_DIR}/tool/MemLock/LLVMlib_asan_6.0.1/* ${ROOT_DIR}/clang+llvm/ua_asan/lib/clang/6.0.1/lib/linux/
 rm -rf ${ROOT_DIR}/tool/MemLock/LLVMlib_asan_6.0.1/
 
 set +x
