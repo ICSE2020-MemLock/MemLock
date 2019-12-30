@@ -1,14 +1,10 @@
 #
-# MemLock - makefile
+# american fuzzy lop - makefile
 # -----------------------------
 #
-# AFL is written and maintained by Michal Zalewski <lcamtuf@google.com>
+# Written and maintained by Michal Zalewski <lcamtuf@google.com>
 # 
 # Copyright 2013, 2014, 2015, 2016, 2017 Google Inc. All rights reserved.
-#
-# MemLock is written and maintained by wcventure <wcventure@outlook.com>
-# 
-# Copyright 2019, 2020 SZU Inc. All rights reserved.
 # 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -28,14 +24,13 @@ MISC_PATH   = $(PREFIX)/share/afl
 
 # PROGS intentionally omit afl-as, which gets installed elsewhere.
 
-PROGS       = afl-gcc memlock-stack-fuzz memlock-heap-fuzz afl-showmap afl-tmin afl-gotcpu afl-analyze
+PROGS       = afl-gcc afl-fuzz afl-showmap afl-tmin afl-gotcpu afl-analyze
 SH_PROGS    = afl-plot afl-cmin afl-whatsup
 
 CFLAGS     ?= -O3 -funroll-loops
 CFLAGS     += -Wall -D_FORTIFY_SOURCE=2 -g -Wno-pointer-sign \
 	      -DAFL_PATH=\"$(HELPER_PATH)\" -DDOC_PATH=\"$(DOC_PATH)\" \
 	      -DBIN_PATH=\"$(BIN_PATH)\"
-LDFLAGS += -lm
 
 ifneq "$(filter Linux GNU%,$(shell uname))" ""
   LDFLAGS  += -ldl
@@ -74,16 +69,10 @@ afl-as: afl-as.c afl-as.h $(COMM_HDR) | test_x86
 	$(CC) $(CFLAGS) $@.c -o $@ $(LDFLAGS)
 	ln -sf afl-as as
 
-memlock-stack-fuzz: memlock-stack-fuzz.c $(COMM_HDR) | test_x86
-	$(CC) $(CFLAGS) $@.c -o $@ $(LDFLAGS)
-	
-memlock-heap-fuzz: memlock-heap-fuzz.c $(COMM_HDR) | test_x86
+afl-fuzz: afl-fuzz.c $(COMM_HDR) | test_x86
 	$(CC) $(CFLAGS) $@.c -o $@ $(LDFLAGS)
 
 afl-showmap: afl-showmap.c $(COMM_HDR) | test_x86
-	$(CC) $(CFLAGS) $@.c -o $@ $(LDFLAGS)
-
-afl-showmax: afl-showmax.c $(COMM_HDR) | test_x86
 	$(CC) $(CFLAGS) $@.c -o $@ $(LDFLAGS)
 
 afl-tmin: afl-tmin.c $(COMM_HDR) | test_x86
@@ -135,14 +124,9 @@ install: all
 	rm -f $${DESTDIR}$(BIN_PATH)/afl-as
 	if [ -f afl-qemu-trace ]; then install -m 755 afl-qemu-trace $${DESTDIR}$(BIN_PATH); fi
 ifndef AFL_TRACE_PC
-	if [ -f memlock-stack-clang -a -f afl-llvm-pass-stack.so -a -f afl-llvm-rt-stack.o ]; then set -e; install -m 755 memlock-stack-clang $${DESTDIR}$(BIN_PATH); ln -sf memlock-stack-clang $${DESTDIR}$(BIN_PATH)/memlock-stack-clang++; install -m 755 afl-llvm-pass-stack.so afl-llvm-rt-stack.o $${DESTDIR}$(HELPER_PATH); fi
+	if [ -f afl-clang-fast -a -f afl-llvm-pass.so -a -f afl-llvm-rt.o ]; then set -e; install -m 755 afl-clang-fast $${DESTDIR}$(BIN_PATH); ln -sf afl-clang-fast $${DESTDIR}$(BIN_PATH)/afl-clang-fast++; install -m 755 afl-llvm-pass.so afl-llvm-rt.o $${DESTDIR}$(HELPER_PATH); fi
 else
-	if [ -f memlock-stack-clang -a -f afl-llvm-rt-stack.o ]; then set -e; install -m 755 memlock-stack-clang $${DESTDIR}$(BIN_PATH); ln -sf memlock-stack-clang $${DESTDIR}$(BIN_PATH)/memlock-stack-clang++; install -m 755 afl-llvm-rt-stack.o $${DESTDIR}$(HELPER_PATH); fi
-endif
-ifndef AFL_TRACE_PC
-	if [ -f memlock-heap-clang -a -f afl-llvm-pass-heap.so -a -f afl-llvm-rt-heap.o ]; then set -e; install -m 755 memlock-heap-clang $${DESTDIR}$(BIN_PATH); ln -sf memlock-heap-clang $${DESTDIR}$(BIN_PATH)/memlock-heap-clang++; install -m 755 afl-llvm-pass-heap.so afl-llvm-rt-heap.o $${DESTDIR}$(HELPER_PATH); fi
-else
-	if [ -f memlock-heap-clang -a -f afl-llvm-rt-heap.o ]; then set -e; install -m 755 memlock-heap-clang $${DESTDIR}$(BIN_PATH); ln -sf memlock-heap-clang $${DESTDIR}$(BIN_PATH)/memlock-heap-clangt++; install -m 755 afl-llvm-rt-heap.o $${DESTDIR}$(HELPER_PATH); fi
+	if [ -f afl-clang-fast -a -f afl-llvm-rt.o ]; then set -e; install -m 755 afl-clang-fast $${DESTDIR}$(BIN_PATH); ln -sf afl-clang-fast $${DESTDIR}$(BIN_PATH)/afl-clang-fast++; install -m 755 afl-llvm-rt.o $${DESTDIR}$(HELPER_PATH); fi
 endif
 	if [ -f afl-llvm-rt-32.o ]; then set -e; install -m 755 afl-llvm-rt-32.o $${DESTDIR}$(HELPER_PATH); fi
 	if [ -f afl-llvm-rt-64.o ]; then set -e; install -m 755 afl-llvm-rt-64.o $${DESTDIR}$(HELPER_PATH); fi
