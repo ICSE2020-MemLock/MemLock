@@ -32,8 +32,8 @@ else
 	PATH_SAVE=$PATH
 	LD_SAVE=$LD_LIBRARY_PATH
 
-	export PATH=${ROOT_DIR}/clang+llvm/bin:$PATH
-	export LD_LIBRARY_PATH=${ROOT_DIR}/clang+llvm/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
+	export PATH=${ROOT_DIR}/clang+llvm/ua_asan/bin:$PATH
+	export LD_LIBRARY_PATH=${ROOT_DIR}/clang+llvm/ua_asan/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
 	export AFL_PATH=${ROOT_DIR}/tool/MemLock
 
 	cd $(dirname ${BIN_PATH})/readelf/SRC
