@@ -12,16 +12,14 @@ The repository contains three folders: [*tool*](#tool), [*tests*](#tests) and [*
 
 ## Tool
 
-MemLock is built on top of the fuzzer AFL. Check out [AFL's website](http://lcamtuf.coredump.cx/afl/) for more information details. We provide here a snapshot of MemLock.
-
-For simplicity, we provide shell script for the whole installation. And we recommend that you use [docker image](#installation-using-docker) to build MemLock.
+MemLock is built on top of the fuzzer AFL. Check out [AFL's website](http://lcamtuf.coredump.cx/afl/) for more information details. We provide here a snapshot of MemLock. For simplicity, we provide shell script for the whole installation. And we recommend that you use [docker image](#installation-using-docker) to build MemLock.
 
 ### Requirements
 
 - Recommended: Ubuntu 16.04 LTS
+- Git, Build-Essentials, Python3
+- Docker >= 19.03.5
 - clang+LLVM 6.0.1: run ` ./tool/install_llvm.sh`
-- Python3
-- Git
 
 ### Clone the Repository
 
