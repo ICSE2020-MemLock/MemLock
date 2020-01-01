@@ -60,3 +60,9 @@ tool/AFL-2.52b/afl-llvm-pass.so
 tool/AFL-2.52b/afl-llvm-rt-64.o
 tool/AFL-2.52b/afl-llvm-rt.o
 evaluation/BUILD/*/SRC/
+evaluation/FUZZ/cxxfilt
+evaluation/FUZZ/nm
+evaluation/FUZZ/readelf
+evaluation/FUZZ/mjs
+evaluation/FUZZ/nasm
+evaluation/FUZZ/flex

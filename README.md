@@ -17,8 +17,8 @@ MemLock is built on top of the fuzzer AFL. Check out [AFL's website](http://lcam
 ### Requirements
 
 - Recommended: Ubuntu 16.04 LTS
-- Git, Build-Essentials, Python3
-- Docker >= 19.03.5
+- Tmux, Git, Build-Essentials, Python3: run `sudo apt install tmux git build-essential python3`
+- Docker
 - clang+LLVM 6.0.1: run ` ./tool/install_llvm.sh`
 
 ### Clone the Repository
@@ -37,10 +37,10 @@ We recommend that you perform the installation using Docker. This will save you 
 $ echo 0|sudo tee /proc/sys/kernel/yama/ptrace_scope
 
 # build docker image
-$ docker build -t memlock ./
+$ sudo docker build -t memlock ./
 
 # run docker image
-$ docker run --cap-add=SYS_PTRACE -it memlock /bin/bash
+$ sudo docker run --cap-add=SYS_PTRACE -it memlock /bin/bash
 ```
 
 ### Installation without Docker
