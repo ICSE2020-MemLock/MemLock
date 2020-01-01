@@ -43,3 +43,4 @@ else
 	done
 	export ASAN_OPTIONS=detect_odr_violation=0:allocator_may_return_null=1:abort_on_error=1:symbolize=0:detect_leaks=0
 	${ROOT_DIR}/tool/AFL-2.52b/build/bin/afl-fuzz -i ${ROOT_DIR}/evaluation/BUILD/nm/SEED/ -o out_AFL$i -m none -d --  ${ROOT_DIR}/evaluation/BUILD/cxxfilt/SRC/build/bin/nm -C @@
+fi
