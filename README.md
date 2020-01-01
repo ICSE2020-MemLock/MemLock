@@ -17,7 +17,7 @@ MemLock is built on top of the fuzzer AFL. Check out [AFL's website](http://lcam
 ### Requirements
 
 - Recommended: Ubuntu 16.04 LTS
-- Tmux, Git, Build-Essentials, Python3: run `sudo apt install tmux git build-essential python3`
+- Tmux, Git, Build-Essentials, Python3, Cmake, Automake, Autoconf, Autotools: run `sudo apt install tmux git build-essential python3 cmake autoamke autoconf autotools-dev`
 - Docker
 - clang+LLVM 6.0.1: run ` ./tool/install_llvm.sh`
 
