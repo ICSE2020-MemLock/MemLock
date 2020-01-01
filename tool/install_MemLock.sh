@@ -28,4 +28,7 @@ make install
 cd ${ROOT_DIR}/tool/AFL-2.52b
 make clean
 make
+cd ${ROOT_DIR}/tool/AFL-2.52b/llvm_mode
+make
+cd ${ROOT_DIR}/tool/AFL-2.52b
 make install
