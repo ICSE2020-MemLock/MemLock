@@ -22,30 +22,25 @@ elif ! [ -d "${ROOT_DIR}/clang+llvm"  ]; then
 	echo "export PATH=$PREFIX/clang+llvm/bin:\$PATH"
 	echo "export LD_LIBRARY_PATH=$PREFIX/clang+llvm/lib:\$LD_LIBRARY_PATH"
 else
+	if ! [ -d "${ROOT_DIR}/evaluation/BUILD/nm/SRC/build/bin" ]; then
+		${ROOT_DIR}/evaluation/BUILD/build_nm.sh
+	fi
 	echo "start ..."
-	wget -c https://ftp.gnu.org/gnu/binutils/binutils-2.31.tar.gz
-	tar -zxvf binutils-2.31.tar.gz -C $(dirname ${BIN_PATH})/nm/
-	rm binutils-2.31.tar.gz
-	rm -rf $(dirname ${BIN_PATH})/nm/SRC
-	mv $(dirname ${BIN_PATH})/nm/binutils-2.31 $(dirname ${BIN_PATH})/nm/SRC
-
-	PATH_SAVE=$PATH
-	LD_SAVE=$LD_LIBRARY_PATH
-
 	export PATH=${ROOT_DIR}/clang+llvm/bin:$PATH
 	export LD_LIBRARY_PATH=${ROOT_DIR}/clang+llvm/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
 	export AFL_PATH=${ROOT_DIR}/tool/MemLock
-
-	cd $(dirname ${BIN_PATH})/nm/SRC
-	make distclean
-	if [ -d "$(dirname ${BIN_PATH})/nm/SRC/build"  ]; then
-		rm -rf $(dirname ${BIN_PATH})/nm/SRC/build
+	cd ${ROOT_DIR}/evaluation/FUZZ
+	if ! [ -d "${ROOT_DIR}/evaluation/FUZZ/nm" ]; then
+		mkdir nm
 	fi
-	mkdir $(dirname ${BIN_PATH})/nm/SRC/build
-	CC=${ROOT_DIR}/tool/MemLock/build/bin/memlock-stack-clang CXX=${ROOT_DIR}/tool/MemLock/build/bin/memlock-stack-clang++ CFLAGS="-g -O0 -fsanitize=address" CXXFLAGS="-g -O0 -fsanitize=address" ./configure --prefix=$(dirname ${BIN_PATH})/nm/SRC/build --disable-shared
-	make
-	make install
-
-	export PATH=${PATH_SAVE}
-	export LD_LIBRARY_PATH=${LD_SAVE}
+	cd nm
+	i=0
+	for ((i=1; i<100; i++))
+	do
+		if ! [ -d "${ROOT_DIR}/evaluation/FUZZ/nm/out_MemLock$i" ]; then
+			break
+		fi
+	done
+	export ASAN_OPTIONS=detect_odr_violation=0:allocator_may_return_null=1:abort_on_error=1:symbolize=0:detect_leaks=0
+	${ROOT_DIR}/tool/MemLock/build/bin/memlock-stack-fuzz -i ${ROOT_DIR}/evaluation/BUILD/nm/SEED/ -o out_MemLock$i -m none -d --  ${ROOT_DIR}/evaluation/BUILD/cxxfilt/SRC/build/bin/nm -C @@
 fi
