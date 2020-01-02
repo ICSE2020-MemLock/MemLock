@@ -318,9 +318,9 @@ int main(int argc, char** argv) {
   if (isatty(2) && !getenv("AFL_QUIET")) {
 
 #ifdef USE_TRACE_PC
-    SAYF(cCYA "MemLock-heap-fuzzer: afl-clang-heap [tpcg] " cBRI VERSION  cRST " by <wcventure@126.com>\n");
+    SAYF(cCYA "MemLock-heap-fuzzer: memlock-heap-clang [tpcg] " cBRI VERSION  cRST " by <wcventure@126.com>\n");
 #else
-    SAYF(cCYA "MemLock-heap-fuzzer: afl-clang-heap " cBRI VERSION  cRST " by <wcventure@126.com>\n");
+    SAYF(cCYA "MemLock-heap-fuzzer: memlock-heap-clang " cBRI VERSION  cRST " by <wcventure@126.com>\n");
 #endif /* ^USE_TRACE_PC */
 
   }

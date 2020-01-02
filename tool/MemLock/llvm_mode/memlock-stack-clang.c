@@ -318,9 +318,9 @@ int main(int argc, char** argv) {
   if (isatty(2) && !getenv("AFL_QUIET")) {
 
 #ifdef USE_TRACE_PC
-    SAYF(cCYA "Stack-overflow-fuzzer: afl-clang-fast [tpcg] " cBRI VERSION  cRST " by <wcventure@126.com>\n");
+    SAYF(cCYA "MemLock-stack-fuzzer: memlock-stack-clang [tpcg] " cBRI VERSION  cRST " by <wcventure@126.com>\n");
 #else
-    SAYF(cCYA "Stack-overflow-fuzzer: afl-clang-fast " cBRI VERSION  cRST " by <wcventure@126.com>\n");
+    SAYF(cCYA "MemLock-stack-fuzzer: memlock-stack-clang " cBRI VERSION  cRST " by <wcventure@126.com>\n");
 #endif /* ^USE_TRACE_PC */
 
   }
