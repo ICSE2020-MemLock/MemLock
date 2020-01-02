@@ -43,13 +43,6 @@ $ sudo docker build -t memlock ./
 $ sudo docker run --cap-add=SYS_PTRACE -it memlock /bin/bash
 ```
 
-### Installation without Docker
-
-```sh
-$ ./tool/install_MemLock.sh
-```
-
-
 ## Tests
 
 As with AFL, system core dumps must be disabled.
