@@ -61,7 +61,7 @@ else
 	        rm -rf $(dirname ${BIN_PATH})/nm/SRC_AFL/build
         fi
 	mkdir $(dirname ${BIN_PATH})/nm/SRC_AFL/build
-	CC=${ROOT_DIR}/tool/AFL/build/bin/afl-clang-fast CXX=${ROOT_DIR}/tool/AFL/build/bin/afl-clang-fast++ CFLAGS="-g -O0 -fsanitize=address" CXXFLAGS="-g -O0 -fsanitize=address" ./configure --prefix=$(dirname ${BIN_PATH})/nm/SRC_AFL/build --disable-shared
+	CC=${ROOT_DIR}/tool/AFL-2.52b/build/bin/afl-clang-fast CXX=${ROOT_DIR}/tool/AFL-2.52b/build/bin/afl-clang-fast++ CFLAGS="-g -O0 -fsanitize=address" CXXFLAGS="-g -O0 -fsanitize=address" ./configure --prefix=$(dirname ${BIN_PATH})/nm/SRC_AFL/build --disable-shared
         make
 	make install
 

@@ -26,7 +26,7 @@ elif ! [ -d "${ROOT_DIR}/clang+llvm"  ]; then
 	echo "export PATH=$PREFIX/clang+llvm/bin:\$PATH"
 	echo "export LD_LIBRARY_PATH=$PREFIX/clang+llvm/lib:\$LD_LIBRARY_PATH"
 else
-	if ! [ -d "${ROOT_DIR}/evaluation/BUILD/cxxfilt/SRC/build/bin" ]; then
+	if ! [ -d "${ROOT_DIR}/evaluation/BUILD/cxxfilt/SRC_MemLock/build/bin" ]; then
 		${ROOT_DIR}/evaluation/BUILD/build_cxxfilt.sh
 	fi
 	echo "start ..."
@@ -43,5 +43,5 @@ else
 		fi
 	done
 	export ASAN_OPTIONS=detect_odr_violation=0:allocator_may_return_null=1:abort_on_error=1:symbolize=0:detect_leaks=0
-	${ROOT_DIR}/tool/MemLock/build/bin/memlock-stack-fuzz -i ${ROOT_DIR}/evaluation/BUILD/cxxfilt/SEED/ -o out_MemLock$i -m none -d --  ${ROOT_DIR}/evaluation/BUILD/cxxfilt/SRC/build/bin/c++filt -t
+	${ROOT_DIR}/tool/MemLock/build/bin/memlock-stack-fuzz -i ${ROOT_DIR}/evaluation/BUILD/cxxfilt/SEED/ -o out_MemLock$i -m none -d --  ${ROOT_DIR}/evaluation/BUILD/cxxfilt/SRC_MemLock/build/bin/c++filt -t
 fi
