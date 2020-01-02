@@ -11,7 +11,7 @@ RUN mkdir -p /workdir/MemLock
 WORKDIR /workdir/MemLock
 COPY . /workdir/MemLock
 
-RUN echo core|sudo tee /proc/sys/kernel/core_pattern
-RUN echo performance|sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
+#RUN echo core|sudo tee /proc/sys/kernel/core_pattern
+#RUN echo performance|sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
 RUN tool/install_llvm.sh
 RUN tool/install_MemLock.sh
