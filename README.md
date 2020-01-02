@@ -6,7 +6,7 @@
 
 - **Benchmark**: https://github.com/ICSE2020-MemLock/MemLock_Benchmark
 
-This repository provides the tool and the evaluation subjects for the paper "MemLock: Memory Usage Guided Fuzzing" accepted for the technical track at ICSE'2020. A pre-print of the paper can be found on [ICSE2020_MemLock.pdf](https://wcventure.github.io/pdf/ICSE2020_MemLock.pdf).
+This repository provides the tool and the evaluation subjects for the paper "MemLock: Memory Usage Guided Fuzzing" accepted for the technical track at ICSE'2020. A pre-print of the paper can be found at [ICSE2020_MemLock.pdf](https://wcventure.github.io/pdf/ICSE2020_MemLock.pdf).
 
 The repository contains three folders: [*tool*](#tool), [*tests*](#tests) and [*evaluation*](#evaluation).
 
