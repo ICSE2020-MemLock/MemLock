@@ -7,12 +7,15 @@ if ! [ -d "${ROOT_DIR}/tool/MemLock/build/bin" ]; then
 	${ROOT_DIR}/tool/install_MemLock.sh
 fi
 
+if ! [ -d "${ROOT_DIR}/tool/MemLock/build/bin" ]; then
+	${ROOT_DIR}/tool/install_MemLock.sh
+fi
+
 PATH_SAVE=$PATH
 LD_SAVE=$LD_LIBRARY_PATH
 
 export PATH=${ROOT_DIR}/clang+llvm/bin:$PATH
 export LD_LIBRARY_PATH=${ROOT_DIR}/clang+llvm/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
-export AFL_PATH=${ROOT_DIR}/tool/MemLock
 
 if ! [ $(command llvm-config --version) = "6.0.1" ]; then
 	echo ""
@@ -33,18 +36,35 @@ else
 	wget -c https://ftp.gnu.org/gnu/binutils/binutils-2.31.tar.gz
 	tar -zxvf binutils-2.31.tar.gz -C $(dirname ${BIN_PATH})/nm/
 	rm binutils-2.31.tar.gz
-	rm -rf $(dirname ${BIN_PATH})/nm/SRC
-	mv $(dirname ${BIN_PATH})/nm/binutils-2.31 $(dirname ${BIN_PATH})/nm/SRC
+	rm -rf $(dirname ${BIN_PATH})/nm/SRC_MemLock
+	rm -rf $(dirname ${BIN_PATH})/nm/SRC_AFL
+	mv $(dirname ${BIN_PATH})/nm/binutils-2.31 $(dirname ${BIN_PATH})/nm/SRC_MemLock
+	cp -rf $(dirname ${BIN_PATH})/nm/SRC_MemLock $(dirname ${BIN_PATH})/nm/SRC_AFL
 
-	cd $(dirname ${BIN_PATH})/nm/SRC
+	#build MemLock project
+	export AFL_PATH=${ROOT_DIR}/tool/MemLock
+	cd $(dirname ${BIN_PATH})/nm/SRC_MemLock
 	make distclean
-	if [ -d "$(dirname ${BIN_PATH})/nm/SRC/build"  ]; then
-		rm -rf $(dirname ${BIN_PATH})/nm/SRC/build
+	if [ -d "$(dirname ${BIN_PATH})/nm/SRC_MemLock/build"  ]; then
+		rm -rf $(dirname ${BIN_PATH})/nm/SRC_MemLock/build
 	fi
-	mkdir $(dirname ${BIN_PATH})/nm/SRC/build
-	CC=${ROOT_DIR}/tool/MemLock/build/bin/memlock-stack-clang CXX=${ROOT_DIR}/tool/MemLock/build/bin/memlock-stack-clang++ CFLAGS="-g -O0 -fsanitize=address" CXXFLAGS="-g -O0 -fsanitize=address" ./configure --prefix=$(dirname ${BIN_PATH})/nm/SRC/build --disable-shared
+	mkdir $(dirname ${BIN_PATH})/nm/SRC_MemLock/build
+	CC=${ROOT_DIR}/tool/MemLock/build/bin/memlock-stack-clang CXX=${ROOT_DIR}/tool/MemLock/build/bin/memlock-stack-clang++ CFLAGS="-g -O0 -fsanitize=address" CXXFLAGS="-g -O0 -fsanitize=address" ./configure --prefix=$(dirname ${BIN_PATH})/nm/SRC_MemLock/build --disable-shared
 	make
 	make install
+
+	#build AFL project
+	export AFL_PATH=${ROOT_DIR}/tool/AFL-2.52b
+	cd $(dirname ${BIN_PATH})/nm/SRC_AFL
+        make distclean
+        if [ -d "$(dirname ${BIN_PATH})/nm/SRC_AFL/build"  ]; then
+	        rm -rf $(dirname ${BIN_PATH})/nm/SRC_AFL/build
+        fi
+	mkdir $(dirname ${BIN_PATH})/nm/SRC_AFL/build
+	CC=${ROOT_DIR}/tool/AFL/build/bin/afl-clang-fast CXX=${ROOT_DIR}/tool/AFL/build/bin/afl-clang-fast++ CFLAGS="-g -O0 -fsanitize=address" CXXFLAGS="-g -O0 -fsanitize=address" ./configure --prefix=$(dirname ${BIN_PATH})/nm/SRC_AFL/build --disable-shared
+        make
+	make install
+
 
 	export PATH=${PATH_SAVE}
 	export LD_LIBRARY_PATH=${LD_SAVE}
