@@ -7,6 +7,10 @@ if ! [ -d "${ROOT_DIR}/tool/AFL-2.52b/build/bin" ]; then
 	${ROOT_DIR}/tool/install_MemLock.sh
 fi
 
+export PATH=${ROOT_DIR}/clang+llvm/bin:$PATH
+export LD_LIBRARY_PATH=${ROOT_DIR}/clang+llvm/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
+export AFL_PATH=${ROOT_DIR}/tool/AFL-2.52b
+
 if ! [ $(command llvm-config --version) = "6.0.1" ]; then
 	echo ""
 	echo "You can simply run tool/build_MemLock.sh to build the environment."
@@ -26,9 +30,6 @@ else
 		${ROOT_DIR}/evaluation/BUILD/build_cxxfilt.sh
 	fi
 	echo "start ..."
-	export PATH=${ROOT_DIR}/clang+llvm/bin:$PATH
-	export LD_LIBRARY_PATH=${ROOT_DIR}/clang+llvm/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
-	export AFL_PATH=${ROOT_DIR}/tool/AFL-2.52b
 	cd ${ROOT_DIR}/evaluation/FUZZ
 	if ! [ -d "${ROOT_DIR}/evaluation/FUZZ/cxxfilt" ]; then
 		mkdir cxxfilt
