@@ -43,5 +43,5 @@ else
 		fi
 	done
 	export ASAN_OPTIONS=detect_odr_violation=0:allocator_may_return_null=0:abort_on_error=1:symbolize=0:detect_leaks=0
-	${ROOT_DIR}/tool/MemLock/build/bin/memlock-stack-fuzz -i ${ROOT_DIR}/evaluation/BUILD/readelf/SEED/ -o out_MemLock$i -m none -d --  ${ROOT_DIR}/evaluation/BUILD/readelf/SRC_MemLock/build/bin/readelf -a @@
+	${ROOT_DIR}/tool/MemLock/build/bin/memlock-heap-fuzz -i ${ROOT_DIR}/evaluation/BUILD/readelf/SEED/ -o out_MemLock$i -m none -d --  ${ROOT_DIR}/evaluation/BUILD/readelf/SRC_MemLock/build/bin/readelf -a @@
 fi

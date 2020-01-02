@@ -50,7 +50,7 @@ else
 		rm -rf $(dirname ${BIN_PATH})/readelf/SRC_MemLock/build
 	fi
 	mkdir $(dirname ${BIN_PATH})/readelf/SRC_MemLock/build
-	CC=${ROOT_DIR}/tool/MemLock/build/bin/memlock-stack-clang CXX=${ROOT_DIR}/tool/MemLock/build/bin/memlock-stack-clang++ CFLAGS="-g -O0 -fsanitize=address" CXXFLAGS="-g -O0 -fsanitize=address" ./configure --prefix=$(dirname ${BIN_PATH})/readelf/SRC_MemLock/build --disable-shared
+	CC=${ROOT_DIR}/tool/MemLock/build/bin/memlock-heap-clang CXX=${ROOT_DIR}/tool/MemLock/build/bin/memlock-heap-clang++ CFLAGS="-g -O0 -fsanitize=address" CXXFLAGS="-g -O0 -fsanitize=address" ./configure --prefix=$(dirname ${BIN_PATH})/readelf/SRC_MemLock/build --disable-shared
 	make
 	make install
 
