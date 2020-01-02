@@ -73,7 +73,7 @@ $ cd tests
 # run testing example 1 with MemLock
 $ run_test1_MemLock.sh
 
-# run testing example 1 with AFL
+# run testing example 1 with AFL (Open another terminal)
 $ run_test1_AFL.sh
 ```
 
@@ -88,7 +88,7 @@ $ cd tests
 # run testing example 2 with MemLock
 $ run_test2_MemLock.sh
 
-# run testing example 2 with AFL
+# run testing example 2 with AFL (Open another terminal)
 $ run_test2_AFL.sh
 ```
 
@@ -118,7 +118,7 @@ $ echo performance | tee cpu*/cpufreq/scaling_governor
 $ exit
 ```
 
-After instrumenting the subjects, In FUZZ folder you can run the script `./run_MemLock_cxxfilt.sh` to run a MemLock fuzzer instance on program *cxxfilt*. If you want to compare its performance with AFL, you can run the script `./run_AFL_cxxfilt.sh`.
+After instrumenting the subjects, In FUZZ folder you can run the script `./run_MemLock_cxxfilt.sh` to run a MemLock fuzzer instance on program *cxxfilt*. If you want to compare its performance with AFL, you can open another terminal and run the script `./run_AFL_cxxfilt.sh`.
 
 ```sh
 # build cxxfilt
