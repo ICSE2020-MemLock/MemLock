@@ -101,16 +101,6 @@ $ ./build_cxxfilt.sh
 
 ### Run for Fuzzing
 
-As with AFL, system core dumps must be disabled.
-
-```
-$ sudo su
-$ echo core >/proc/sys/kernel/core_pattern
-$ cd /sys/devices/system/cpu
-$ echo performance | tee cpu*/cpufreq/scaling_governor
-$ exit
-```
-
 After instrumenting the subjects, In FUZZ folder you can run the script `./run_MemLock_cxxfilt.sh` to run a MemLock fuzzer instance on program *cxxfilt*. If you want to compare its performance with AFL, you can open another terminal and run the script `./run_AFL_cxxfilt.sh`.
 
 ```sh
