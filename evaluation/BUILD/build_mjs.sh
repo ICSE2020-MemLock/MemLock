@@ -43,38 +43,35 @@ elif ! [ -d "${ROOT_DIR}/clang+llvm"  ]; then
 	echo "export LD_LIBRARY_PATH=$PREFIX/clang+llvm/lib:\$LD_LIBRARY_PATH"
 else
 	echo "start ..."
-	wget -c https://ftp.gnu.org/gnu/binutils/binutils-2.31.tar.gz
-	tar -zxvf binutils-2.31.tar.gz -C $(dirname ${BIN_PATH})/cxxfilt/
-	rm binutils-2.31.tar.gz
-	rm -rf $(dirname ${BIN_PATH})/cxxfilt/SRC_MemLock
-	rm -rf $(dirname ${BIN_PATH})/cxxfilt/SRC_AFL
-	mv $(dirname ${BIN_PATH})/cxxfilt/binutils-2.31 $(dirname ${BIN_PATH})/cxxfilt/SRC_MemLock
-	cp -rf $(dirname ${BIN_PATH})/cxxfilt/SRC_MemLock $(dirname ${BIN_PATH})/cxxfilt/SRC_AFL
+    cd ${ROOT_DIR}/evaluation/BUILD/mjs
+    git clone https://github.com/cesanta/mjs SRC
+    cd SRC
+    git checkout 2827bd00b59bdc176a010b22fc4acde9b580d6c2
+    cd ..
+	rm -rf $(dirname ${BIN_PATH})/mjs/SRC_MemLock
+	rm -rf $(dirname ${BIN_PATH})/mjs/SRC_AFL
+	mv $(dirname ${BIN_PATH})/mjs/SRC $(dirname ${BIN_PATH})/mjs/SRC_MemLock
+	cp -rf $(dirname ${BIN_PATH})/mjs/SRC_MemLock $(dirname ${BIN_PATH})/mjs/SRC_AFL
 
 	#build MemLock project
 	export AFL_PATH=${ROOT_DIR}/tool/MemLock
-	cd $(dirname ${BIN_PATH})/cxxfilt/SRC_MemLock
-	make distclean
-	if [ -d "$(dirname ${BIN_PATH})/cxxfilt/SRC_MemLock/build"  ]; then
-		rm -rf $(dirname ${BIN_PATH})/cxxfilt/SRC_MemLock/build
+	cd $(dirname ${BIN_PATH})/mjs/SRC_MemLock
+	make clean
+	if [ -d "$(dirname ${BIN_PATH})/mjs/SRC_MemLock/build"  ]; then
+		rm -rf $(dirname ${BIN_PATH})/mjs/SRC_MemLock/build
 	fi
-	mkdir $(dirname ${BIN_PATH})/cxxfilt/SRC_MemLock/build
-	CC=${ROOT_DIR}/tool/MemLock/build/bin/memlock-stack-clang CXX=${ROOT_DIR}/tool/MemLock/build/bin/memlock-stack-clang++ CFLAGS="-g -O0 -fsanitize=address" CXXFLAGS="-g -O0 -fsanitize=address" ./configure --prefix=$(dirname ${BIN_PATH})/cxxfilt/SRC_MemLock/build --disable-shared
-	make
-	make install
-
+	mkdir $(dirname ${BIN_PATH})/mjs/SRC_MemLock/build
+    ${ROOT_DIR}/tool/MemLock/build/bin/memlock-stack-clang mjs.c -DMJS_MAIN -fsanitize=address -g -o build/mjs -ldl
+	
 	#build AFL project
 	export AFL_PATH=${ROOT_DIR}/tool/AFL-2.52b
-	cd $(dirname ${BIN_PATH})/cxxfilt/SRC_AFL
-	make distclean
-    if [ -d "$(dirname ${BIN_PATH})/cxxfilt/SRC_AFL/build"  ]; then
-        rm -rf $(dirname ${BIN_PATH})/cxxfilt/SRC_AFL/build
+	cd $(dirname ${BIN_PATH})/mjs/SRC_AFL
+	make clean
+    if [ -d "$(dirname ${BIN_PATH})/mjs/SRC_AFL/build"  ]; then
+        rm -rf $(dirname ${BIN_PATH})/mjs/SRC_AFL/build
     fi
-    mkdir $(dirname ${BIN_PATH})/cxxfilt/SRC_AFL/build
-    CC=${ROOT_DIR}/tool/AFL-2.52b/build/bin/afl-clang-fast CXX=${ROOT_DIR}/tool/AFL-2.52b/build/bin/afl-clang-fast++ CFLAGS="-g -O0 -fsanitize=address" CXXFLAGS="-g -O0 -fsanitize=address" ./configure --prefix=$(dirname ${BIN_PATH})/cxxfilt/SRC_AFL/build --disable-shared
-	make
-	make install
-
+    mkdir $(dirname ${BIN_PATH})/mjs/SRC_AFL/build
+    ${ROOT_DIR}/tool/AFL-2.52b/build/bin/afl-clang-fast mjs.c -DMJS_MAIN -fsanitize=address -g -o build/mjs -ldl
 
 	export PATH=${PATH_SAVE}
 	export LD_LIBRARY_PATH=${LD_SAVE}

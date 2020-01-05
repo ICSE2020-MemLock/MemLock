@@ -43,38 +43,41 @@ elif ! [ -d "${ROOT_DIR}/clang+llvm"  ]; then
 	echo "export LD_LIBRARY_PATH=$PREFIX/clang+llvm/lib:\$LD_LIBRARY_PATH"
 else
 	echo "start ..."
-	wget -c https://ftp.gnu.org/gnu/binutils/binutils-2.31.tar.gz
-	tar -zxvf binutils-2.31.tar.gz -C $(dirname ${BIN_PATH})/cxxfilt/
-	rm binutils-2.31.tar.gz
-	rm -rf $(dirname ${BIN_PATH})/cxxfilt/SRC_MemLock
-	rm -rf $(dirname ${BIN_PATH})/cxxfilt/SRC_AFL
-	mv $(dirname ${BIN_PATH})/cxxfilt/binutils-2.31 $(dirname ${BIN_PATH})/cxxfilt/SRC_MemLock
-	cp -rf $(dirname ${BIN_PATH})/cxxfilt/SRC_MemLock $(dirname ${BIN_PATH})/cxxfilt/SRC_AFL
+    cd ${ROOT_DIR}/evaluation/BUILD/yara
+    git clone https://github.com/VirusTotal/yara SRC
+    cd SRC
+    git checkout cdbacf53a4ddac2bf1bc2f4bbe93fbe0a06bfff7
+    cd ..
+	rm -rf $(dirname ${BIN_PATH})/yara/SRC_MemLock
+	rm -rf $(dirname ${BIN_PATH})/yara/SRC_AFL
+	mv $(dirname ${BIN_PATH})/yara/SRC $(dirname ${BIN_PATH})/yara/SRC_MemLock
+	cp -rf $(dirname ${BIN_PATH})/yara/SRC_MemLock $(dirname ${BIN_PATH})/yara/SRC_AFL
 
 	#build MemLock project
 	export AFL_PATH=${ROOT_DIR}/tool/MemLock
-	cd $(dirname ${BIN_PATH})/cxxfilt/SRC_MemLock
-	make distclean
-	if [ -d "$(dirname ${BIN_PATH})/cxxfilt/SRC_MemLock/build"  ]; then
-		rm -rf $(dirname ${BIN_PATH})/cxxfilt/SRC_MemLock/build
+	cd $(dirname ${BIN_PATH})/yara/SRC_MemLock
+	make clean
+    ./bootstrap.sh
+	if [ -d "$(dirname ${BIN_PATH})/yara/SRC_MemLock/build"  ]; then
+		rm -rf $(dirname ${BIN_PATH})/yara/SRC_MemLock/build
 	fi
-	mkdir $(dirname ${BIN_PATH})/cxxfilt/SRC_MemLock/build
-	CC=${ROOT_DIR}/tool/MemLock/build/bin/memlock-stack-clang CXX=${ROOT_DIR}/tool/MemLock/build/bin/memlock-stack-clang++ CFLAGS="-g -O0 -fsanitize=address" CXXFLAGS="-g -O0 -fsanitize=address" ./configure --prefix=$(dirname ${BIN_PATH})/cxxfilt/SRC_MemLock/build --disable-shared
+	mkdir $(dirname ${BIN_PATH})/yara/SRC_MemLock/build
+	CC=${ROOT_DIR}/tool/MemLock/build/bin/memlock-stack-clang CXX=${ROOT_DIR}/tool/MemLock/build/bin/memlock-stack-clang++ CFLAGS="-g -O0 -fsanitize=address" CXXFLAGS="-g -O0 -fsanitize=address" ./configure --prefix=$(dirname ${BIN_PATH})/yara/SRC_MemLock/build --disable-shared
 	make
 	make install
 
 	#build AFL project
 	export AFL_PATH=${ROOT_DIR}/tool/AFL-2.52b
-	cd $(dirname ${BIN_PATH})/cxxfilt/SRC_AFL
-	make distclean
-    if [ -d "$(dirname ${BIN_PATH})/cxxfilt/SRC_AFL/build"  ]; then
-        rm -rf $(dirname ${BIN_PATH})/cxxfilt/SRC_AFL/build
+	cd $(dirname ${BIN_PATH})/yara/SRC_AFL
+	make clean
+    ./bootstrap.sh
+	if [ -d "$(dirname ${BIN_PATH})/yara/SRC_AFL/build"  ]; then
+        rm -rf $(dirname ${BIN_PATH})/yara/SRC_AFL/build
     fi
-    mkdir $(dirname ${BIN_PATH})/cxxfilt/SRC_AFL/build
-    CC=${ROOT_DIR}/tool/AFL-2.52b/build/bin/afl-clang-fast CXX=${ROOT_DIR}/tool/AFL-2.52b/build/bin/afl-clang-fast++ CFLAGS="-g -O0 -fsanitize=address" CXXFLAGS="-g -O0 -fsanitize=address" ./configure --prefix=$(dirname ${BIN_PATH})/cxxfilt/SRC_AFL/build --disable-shared
+    mkdir $(dirname ${BIN_PATH})/yara/SRC_AFL/build
+    CC=${ROOT_DIR}/tool/AFL-2.52b/build/bin/afl-clang-fast CXX=${ROOT_DIR}/tool/AFL-2.52b/build/bin/afl-clang-fast++ CFLAGS="-g -O0 -fsanitize=address" CXXFLAGS="-g -O0 -fsanitize=address" ./configure --prefix=$(dirname ${BIN_PATH})/yara/SRC_AFL/build --disable-shared
 	make
 	make install
-
 
 	export PATH=${PATH_SAVE}
 	export LD_LIBRARY_PATH=${LD_SAVE}

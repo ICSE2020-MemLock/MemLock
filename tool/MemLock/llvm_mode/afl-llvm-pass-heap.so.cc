@@ -96,7 +96,7 @@ bool AFLCoverage::runOnModule(Module &M) {
 
   if (isatty(2) && !getenv("AFL_QUIET")) {
 
-    SAYF(cCYA "Uncontrolled-allocation-fuzzer: afl-llvm-pass " cBRI VERSION cRST " by <wcventure@126.com>\n");
+    SAYF(cCYA "MemLock-heap-fuzzer: afl-llvm-pass " cBRI VERSION cRST " by <wcventure@126.com>\n");
 
   } else be_quiet = 1;
 

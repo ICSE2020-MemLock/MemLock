@@ -34,7 +34,7 @@ if ! [ $(command llvm-config --version) = "6.0.1" ]; then
 	echo "Please set:"
 	echo "export PATH=$PREFIX/clang+llvm/bin:\$PATH"
 	echo "export LD_LIBRARY_PATH=$PREFIX/clang+llvm/lib:\$LD_LIBRARY_PATH"
-elif ! [ -d "${ROOT_DIR}/clang+llvm/ua_asan/bin"  ]; then
+elif ! [ -d "${ROOT_DIR}/clang+llvm/ua_asan/bin" ]; then
 	echo ""
 	echo "You can simply run tool/build_MemLock.sh to build the environment."
 	echo ""
@@ -43,39 +43,47 @@ elif ! [ -d "${ROOT_DIR}/clang+llvm/ua_asan/bin"  ]; then
 	echo "export LD_LIBRARY_PATH=$PREFIX/clang+llvm/ua_asan/lib:\$LD_LIBRARY_PATH"
 else
 	echo "start ..."
-	wget -c https://ftp.gnu.org/gnu/binutils/binutils-2.28.tar.gz
-	tar -zxvf binutils-2.28.tar.gz -C $(dirname ${BIN_PATH})/readelf/
-	rm binutils-2.28.tar.gz
-	rm -rf $(dirname ${BIN_PATH})/readelf/SRC_MemLock
-	rm -rf $(dirname ${BIN_PATH})/readelf/SRC_AFL
-	mv $(dirname ${BIN_PATH})/readelf/binutils-2.28 $(dirname ${BIN_PATH})/readelf/SRC_MemLock
-	cp -rf $(dirname ${BIN_PATH})/readelf/SRC_MemLock $(dirname ${BIN_PATH})/readelf/SRC_AFL
+	cd ${ROOT_DIR}/evaluation/BUILD/exiv2
+    git clone https://github.com/Exiv2/exiv2 SRC
+    cd SRC
+    git checkout fa449a4d2c58d63f0d75ff259f25683a98a44630
+    cd ..
+    rm -rf $(dirname ${BIN_PATH})/exiv2/SRC_MemLock
+    rm -rf $(dirname ${BIN_PATH})/exiv2/SRC_AFL
+    mv $(dirname ${BIN_PATH})/exiv2/SRC $(dirname ${BIN_PATH})/exiv2/SRC_MemLock
+    cp -rf $(dirname ${BIN_PATH})/exiv2/SRC_MemLock $(dirname ${BIN_PATH})/exiv2/SRC_AFL
 
 	#build MemLock project
 	export AFL_PATH=${ROOT_DIR}/tool/MemLock
 	export ASAN_OPTIONS=detect_odr_violation=0:allocator_may_return_null=0:abort_on_error=1:symbolize=0:detect_leaks=0
-	cd $(dirname ${BIN_PATH})/readelf/SRC_MemLock
-	make distclean
-	if [ -d "$(dirname ${BIN_PATH})/readelf/SRC_MemLock/build"  ]; then
-		rm -rf $(dirname ${BIN_PATH})/readelf/SRC_MemLock/build
+	cd $(dirname ${BIN_PATH})/exiv2/SRC_MemLock
+	if [ -d "$(dirname ${BIN_PATH})/exiv2/SRC_MemLock/build"  ]; then
+		rm -rf $(dirname ${BIN_PATH})/exiv2/SRC_MemLock/build
 	fi
-	mkdir $(dirname ${BIN_PATH})/readelf/SRC_MemLock/build
-	CC=${ROOT_DIR}/tool/MemLock/build/bin/memlock-heap-clang CXX=${ROOT_DIR}/tool/MemLock/build/bin/memlock-heap-clang++ CFLAGS="-g -O0 -fsanitize=address" CXXFLAGS="-g -O0 -fsanitize=address" ./configure --prefix=$(dirname ${BIN_PATH})/readelf/SRC_MemLock/build --disable-shared
+	export CC=${ROOT_DIR}/tool/MemLock/build/bin/memlock-heap-clang
+    export CXX=${ROOT_DIR}/tool/MemLock/build/bin/memlock-heap-clang++
+    export CFLAGS="-g -O0 -fsanitize=address"
+    export CXXFLAGS="-g -O0 -fsanitize=address"
+    mkdir $(dirname ${BIN_PATH})/exiv2/SRC_MemLock/build
+    cd $(dirname ${BIN_PATH})/exiv2/SRC_MemLock/build
+    cmake .. -G "Unix Makefiles" -DEXIV2_ENABLE_SHARED=off
 	make
-	make install
 
 	#build AFL project
 	export AFL_PATH=${ROOT_DIR}/tool/AFL-2.52b
 	export ASAN_OPTIONS=detect_odr_violation=0:allocator_may_return_null=0:abort_on_error=1:symbolize=0:detect_leaks=0
-	cd $(dirname ${BIN_PATH})/readelf/SRC_AFL
-	make distclean
-	if [ -d "$(dirname ${BIN_PATH})/readelf/SRC_AFL/build"  ]; then
-        rm -rf $(dirname ${BIN_PATH})/readelf/SRC_AFL/build
+	cd $(dirname ${BIN_PATH})/exiv2/SRC_AFL
+	if [ -d "$(dirname ${BIN_PATH})/exiv2/SRC_AFL/build"  ]; then
+        rm -rf $(dirname ${BIN_PATH})/exiv2/SRC_AFL/build
     fi
-    mkdir $(dirname ${BIN_PATH})/readelf/SRC_AFL/build
-    CC=${ROOT_DIR}/tool/AFL-2.52b/build/bin/afl-clang-fast CXX=${ROOT_DIR}/tool/AFL-2.52b/build/bin/afl-clang-fast++ CFLAGS="-g -O0 -fsanitize=address" CXXFLAGS="-g -O0 -fsanitize=address" ./configure --prefix=$(dirname ${BIN_PATH})/readelf/SRC_AFL/build --disable-shared
+    export CC=${ROOT_DIR}/tool/AFL-2.52b/build/bin/afl-clang-fast
+    export CXX=${ROOT_DIR}/tool/AFL-2.52b/build/bin/afl-clang-fast++
+    export CFLAGS="-g -O0 -fsanitize=address"
+    export CXXFLAGS="-g -O0 -fsanitize=address"
+    mkdir $(dirname ${BIN_PATH})/exiv2/SRC_AFL/build
+    cd $(dirname ${BIN_PATH})/exiv2/SRC_AFL/build
+    cmake .. -G "Unix Makefiles" -DEXIV2_ENABLE_SHARED=off
 	make
-	make install
 
 	export PATH=${PATH_SAVE}
 	export LD_LIBRARY_PATH=${LD_SAVE}
