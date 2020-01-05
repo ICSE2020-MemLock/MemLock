@@ -4,7 +4,7 @@
 
 
 int fact(int n){//递归函数
-	int a[10];
+	int a[5];
 	a[0]=1;
     if (n==1 || n==0)
         return 1;
@@ -30,11 +30,6 @@ int main(int argc, char *argv[]) {
 	
 	//根据文件长度，确定递归次数
 	printf("%d\n", fact(i/3));
-	
-	//根据文件长度，分配堆内存
-	char *buf = malloc(i*sizeof(char));
-	buf[0]='a';
-	free(buf);
 	
     return 0;
 }

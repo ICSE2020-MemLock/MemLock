@@ -37,9 +37,9 @@ elif ! [ -d "${ROOT_DIR}/clang+llvm"  ]; then
     echo "export LD_LIBRARY_PATH=$PREFIX/clang+llvm/lib:\$LD_LIBRARY_PATH"
 else
     echo "start ..."
-    cd ${ROOT_DIR}/tests/test1
-    ${ROOT_DIR}/tool/AFL-2.52b/build/bin/afl-clang-fast -g -O0 -fsanitize=address example1.c -o example1AFL
-    if [ -d "${ROOT_DIR}/tests/test1/in"  ]; then
+    cd ${ROOT_DIR}/tests/test2
+    ${ROOT_DIR}/tool/AFL-2.52b/build/bin/afl-clang-fast -g -O0 -fsanitize=address example2.c -o example2AFL
+    if [ -d "${ROOT_DIR}/tests/test2/in"  ]; then
         rm -rf in
     fi
     mkdir in
@@ -47,10 +47,10 @@ else
     i=0
     for ((i=1; i<100; i++))
     do
-        if ! [ -d "${ROOT_DIR}/tests/test1/out_AFL$i" ]; then
+        if ! [ -d "${ROOT_DIR}/tests/test2/out_AFL$i" ]; then
             break
         fi
     done
-    export ASAN_OPTIONS=detect_odr_violation=0:allocator_may_return_null=1:abort_on_error=1:symbolize=0:detect_leaks=0
-    ${ROOT_DIR}/tool/AFL-2.52b/build/bin/afl-fuzz -i ${ROOT_DIR}/tests/test1/in -o ${ROOT_DIR}/tests/test1/out_AFL$i -m none -d -- ${ROOT_DIR}/tests/test1/example1AFL @@
+    export ASAN_OPTIONS=detect_odr_violation=0:allocator_may_return_null=0:abort_on_error=1:symbolize=0:detect_leaks=0
+    ${ROOT_DIR}/tool/AFL-2.52b/build/bin/afl-fuzz -i ${ROOT_DIR}/tests/test2/in -o ${ROOT_DIR}/tests/test2/out_AFL$i -m none -d -- ${ROOT_DIR}/tests/test2/example2AFL @@
 fi
