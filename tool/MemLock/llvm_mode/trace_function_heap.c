@@ -6,7 +6,7 @@
 #include <sys/ipc.h>//ipc
 #include <sys/shm.h>
 #include <unistd.h>
-#include <sys/malloc.h>
+#include <malloc.h>
 
 struct sys_data
 {
@@ -247,7 +247,7 @@ void instr_ReallocAndSize (void* re, void* p, unsigned long long int a) {
       TotalDeallocNum--;
       ContinueAllocNum++;
       current_memory += malloc_usable_size(p);
-      printf("instru: realloced Fail, current memory is %lld bytes, try to allocat %llu bytes, still %lld bytes for ptr %p\n", current_memory, a, malloc_usable_size(p), p);
+      printf("instru: realloced Fail, current memory is %lld bytes, try to allocat %llu bytes, still %d bytes for ptr %p\n", current_memory, a, malloc_usable_size(p), p);
       //报错
       char *p = (char*)malloc((1ULL << 40));
       printf("%s\n", p);
