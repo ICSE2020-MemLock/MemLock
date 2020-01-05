@@ -46,6 +46,11 @@ CXXFLAGS    += -Wall -D_FORTIFY_SOURCE=2 -g -Wno-pointer-sign \
 CLANG_CFL    = `$(LLVM_CONFIG) --cxxflags` -Wl,-znodelete -fno-rtti -fpic $(CXXFLAGS)
 CLANG_LFL    = `$(LLVM_CONFIG) --ldflags` $(LDFLAGS)
 
+ifeq "$(shell uname)" "Darwin"
+  CLANG_CFL    = `$(LLVM_CONFIG) --cxxflags` -fno-rtti -fpic $(CXXFLAGS)
+  CLANG_LFL    = `$(LLVM_CONFIG) --ldflags` $(LDFLAGS)
+endif
+
 # User teor2345 reports that this is required to make things work on MacOS X.
 
 ifeq "$(shell uname)" "Darwin"
