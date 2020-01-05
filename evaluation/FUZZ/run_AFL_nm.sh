@@ -1,7 +1,17 @@
 #!/bin/bash
 
-BIN_PATH=$(readlink -f "$0")
-ROOT_DIR=$(dirname $(dirname $(dirname $BIN_PATH)))
+# For Mac
+if [ $(command uname) = "Darwin" ]; then
+    if ! [ -x "$(command -v greadlink)"  ]; then
+        brew install coreutils
+    fi
+    BIN_PATH=$(greadlink -f "$0")
+    ROOT_DIR=$(dirname $(dirname $(dirname $BIN_PATH)))
+# For Linux
+else
+    BIN_PATH=$(readlink -f "$0")
+    ROOT_DIR=$(dirname $(dirname $(dirname $BIN_PATH)))
+fi
 
 if ! [ -d "${ROOT_DIR}/tool/AFL-2.52b/build/bin" ]; then
 	${ROOT_DIR}/tool/install_MemLock.sh
