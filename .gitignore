@@ -26,7 +26,7 @@ tool/MemLock/afl-llvm-rt-heap-64.o
 tool/MemLock/afl-llvm-rt-heap-32.o
 tool/MemLock/afl-llvm-rt-heap.o
 tool/MemLock/afl-llvm-rt-stack-64.o
-tool/MemLock/afl-llvm-rt-heap-32.o
+tool/MemLock/afl-llvm-rt-stack-32.o
 tool/MemLock/afl-llvm-rt-stack.o
 tool/MemLock/memlock-heap-clang
 tool/MemLock/memlock-heap-fuzz
@@ -73,6 +73,10 @@ tool/MemLock/memlock-heap-clang.dSYM/
 tool/MemLock/memlock-heap-fuzz.dSYM/
 tool/MemLock/memlock-stack-clang.dSYM/
 tool/MemLock/memlock-stack-fuzz.dSYM/
+tool/MemLock/afl-catch-dlclose.so.dSYM/
+tool/MemLock/afl-llvm-pass-heap.so.dSYM/
+tool/MemLock/afl-llvm-pass-stack.so.dSYM/
+tool/MemLock/llvm_mode/test-instr.dSYM/
 evaluation/BUILD/*/SRC_AFL/
 evaluation/BUILD/*/SRC_MemLock/
 evaluation/BUILD/*/SRC/

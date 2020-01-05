@@ -6,7 +6,7 @@
 #include <sys/ipc.h>//ipc
 #include <sys/shm.h>
 #include <unistd.h>
-#include <malloc.h>
+#include <sys/malloc.h>
 
 struct sys_data
 {
@@ -50,7 +50,7 @@ void update_mem_peak()
   {
     //报错
     FailToAllocate = 1;
-    printf("instru: consume too much memory. current memory try to up to %ld bytes.\n", current_memory);
+    printf("instru: consume too much memory. current memory try to up to %lld bytes.\n", current_memory);
     char *p = (char*)malloc((1ULL << 40));
     printf("%s\n", p);
   }	
@@ -145,7 +145,7 @@ void instr_Free (void* ptr) {
 
 void instr_MallocAndSize (void* re, unsigned long long int a) {
   if (re == NULL){
-    printf("instru: Fail to Allocate in malloc. current memory is %ld bytes, try to allocat %llu bytes.\n", current_memory, a);
+    printf("instru: Fail to Allocate in malloc. current memory is %lld bytes, try to allocat %llu bytes.\n", current_memory, a);
     FailToAllocate = 1;
     //报错
     char *p = (char*)malloc((1ULL << 40));
@@ -171,7 +171,7 @@ void instr_MallocAndSize (void* re, unsigned long long int a) {
 
 void instr_CallocAndSize (void* re, long long int a, long long int b) {
   if (re == NULL){
-    printf("instru: Fail to Allocate in calloc. Current memory is %ld bytes, try to allocat %llu bytes.\n", current_memory, a*b);
+    printf("instru: Fail to Allocate in calloc. Current memory is %lld bytes, try to allocat %llu bytes.\n", current_memory, a*b);
     FailToAllocate = 1;
     //报错
     char *p = (char*)malloc((1ULL << 40));
@@ -219,7 +219,7 @@ void instr_ReallocAhead (void* p, unsigned long long int a) {
 void instr_ReallocAndSize (void* re, void* p, unsigned long long int a) {
   if (p == NULL){ //相当于malloc
     if (re == NULL){
-      printf("instru: Fail to Allocate in realloc(=malloc). current memory is %ld bytes, try to allocat %llu bytes.\n", current_memory, a);
+      printf("instru: Fail to Allocate in realloc(=malloc). current memory is %lld bytes, try to allocat %llu bytes.\n", current_memory, a);
       FailToAllocate = 1;
       //报错
       char *p = (char*)malloc((1ULL << 40));
@@ -247,7 +247,7 @@ void instr_ReallocAndSize (void* re, void* p, unsigned long long int a) {
       TotalDeallocNum--;
       ContinueAllocNum++;
       current_memory += malloc_usable_size(p);
-      printf("instru: realloced Fail, current memory is %ld bytes, try to allocat %llu bytes, still %ld bytes for ptr %p\n", current_memory, a, malloc_usable_size(p), p);
+      printf("instru: realloced Fail, current memory is %lld bytes, try to allocat %llu bytes, still %lld bytes for ptr %p\n", current_memory, a, malloc_usable_size(p), p);
       //报错
       char *p = (char*)malloc((1ULL << 40));
       printf("%s\n", p);
