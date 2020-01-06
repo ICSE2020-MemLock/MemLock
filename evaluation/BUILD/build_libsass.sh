@@ -44,16 +44,23 @@ elif ! [ -d "${ROOT_DIR}/clang+llvm"  ]; then
 else
 	echo "start ..."
 	cd ${ROOT_DIR}/evaluation/BUILD/libsass
+	rm -rf SRC
 	git clone https://github.com/sass/libsass SRC
+	if ! [ -d "$(dirname ${BIN_PATH})/libsass/SRC"  ]; then
+		echo "Can not clone sassc. Please re run this script."
+		exit
+	fi
 	cd SRC
 	git checkout 45f50873962b7d1c66bd115ba6e644bdaaf6cac1
 	git clone https://github.com/sass/sassc.git sassc
 	if ! [ -d "$(dirname ${BIN_PATH})/libsass/SRC/sassc"  ]; then
 		echo "Can not clone sassc. Please rerun this script."
+		exit
 	fi
 	git clone https://github.com/sass/sass-spec.git sass-spec
 	if ! [ -d "$(dirname ${BIN_PATH})/libsass/SRC/sass-spec"  ]; then
-                echo "Can not clone sassc. Please rerun this script."
+                echo "Can not clone sass-spec. Please rerun this script."
+		exit
         fi
 	cd ..
 	rm -rf $(dirname ${BIN_PATH})/libsass/SRC_MemLock
