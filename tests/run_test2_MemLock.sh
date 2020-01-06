@@ -52,5 +52,5 @@ else
         fi
     done
     export ASAN_OPTIONS=detect_odr_violation=0:allocator_may_return_null=0:abort_on_error=1:symbolize=0:detect_leaks=0
-    ${ROOT_DIR}/tool/MemLock/build/bin/memlock-heap-fuzz -i ${ROOT_DIR}/tests/test2/in -o ${ROOT_DIR}/tests/test2/out_MemLock$i -m none -d -- ${ROOT_DIR}/tests/test2/example2MemLock @@
+    ${ROOT_DIR}/tool/MemLock/build/bin/memlock-heap-fuzz -i ${ROOT_DIR}/tests/test2/in -o ${ROOT_DIR}/tests/test2/out_MemLock$i -m none -d -t 5000 -- ${ROOT_DIR}/tests/test2/example2MemLock @@
 fi

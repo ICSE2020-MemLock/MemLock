@@ -5605,7 +5605,7 @@ static u8 fuzz_one(char** argv) {
    * TRIMMING *
    ************/
 
-  if (!dumb_mode && !queue_cur->trim_done) {
+  /*if (!dumb_mode && !queue_cur->trim_done) {
 
     u8 res = trim_case(argv, queue_cur, in_buf);
 
@@ -5617,13 +5617,13 @@ static u8 fuzz_one(char** argv) {
       goto abandon_entry;
     }
 
-    /* Don't retry trimming, even if it failed. */
+    // Don't retry trimming, even if it failed.
 
     queue_cur->trim_done = 1;
 
     if (len != queue_cur->len) len = queue_cur->len;
 
-  }
+  }*/
 
   memcpy(out_buf, in_buf, len);
 
