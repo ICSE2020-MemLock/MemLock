@@ -93,7 +93,7 @@ endif
 	
 ../memlock-heap-clang: memlock-heap-clang.c | test_deps
 	$(CC) $(CFLAGS) $< -o $@ $(LDFLAGS)
-	ln -sf memlock-stack-clang ../memlock-stack-clang++
+	ln -sf memlock-heap-clang ../memlock-heap-clang++
 	
 ../trace_function_stack.o: trace_function_stack.c | test_deps
 	$(CC) $(CFLAGS) -fPIC -c $< -o $@
@@ -150,3 +150,4 @@ all_done: test_build
 clean:
 	rm -f *.o *.so *~ a.out core core.[1-9][0-9]* test-instr .test-instr0 .test-instr1 
 	rm -f $(PROGS) ../memlock-stack-clang++
+	rm -f $(PROGS) ../memlock-heap-clang++

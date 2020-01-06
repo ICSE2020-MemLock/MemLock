@@ -29,6 +29,7 @@ tool/MemLock/afl-llvm-rt-stack-64.o
 tool/MemLock/afl-llvm-rt-stack-32.o
 tool/MemLock/afl-llvm-rt-stack.o
 tool/MemLock/memlock-heap-clang
+tool/MemLock/memlock-heap-clang++
 tool/MemLock/memlock-heap-fuzz
 tool/MemLock/memlock-stack-clang
 tool/MemLock/memlock-stack-clang++

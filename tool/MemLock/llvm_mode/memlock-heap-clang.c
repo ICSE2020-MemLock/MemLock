@@ -105,7 +105,7 @@ static void edit_params(u32 argc, char** argv) {
   name = strrchr(argv[0], '/');
   if (!name) name = argv[0]; else name++;
 
-  if (!strcmp(name, "afl-clang-fast++")) {
+  if (!strcmp(name, "memlock-heap-clang++")) {
     u8* alt_cxx = getenv("AFL_CXX");
     cc_params[0] = alt_cxx ? alt_cxx : (u8*)"clang++";
   } else {
