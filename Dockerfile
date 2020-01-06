@@ -4,7 +4,7 @@ RUN cp /etc/apt/sources.list /etc/apt/sources.list.bak
 RUN sed -i s:/archive.ubuntu.com:/mirrors.tuna.tsinghua.edu.cn/ubuntu:g /etc/apt/sources.list
 RUN apt-get clean
 RUN apt-get update --fix-missing
-RUN apt-get install -y wget git build-essential tmux cmake libtool automake autoconf autotools-dev m4 autopoint help2man bison flex sudo --fix-missing
+RUN apt-get install -y wget git build-essential tmux cmake libtool automake autoconf autotools-dev m4 autopoint help2man bison flex texinfo sudo --fix-missing
 
 RUN mkdir -p /workdir/MemLock
 
