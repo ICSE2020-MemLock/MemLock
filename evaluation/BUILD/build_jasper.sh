@@ -62,11 +62,9 @@ else
 	export CFLAGS="-g -O0 -fsanitize=address"
 	export CXXFLAGS="-g -O0 -fsanitize=address"
 	cd $(dirname ${BIN_PATH})/jasper/SRC_MemLock/build
-	export SOURCE_DIR=$(dirname ${BIN_PATH})/jasper/SRC_MemLock
-	export INSTALL_DIR=$(dirname ${BIN_PATH})/jasper/SRC_MemLock/Build
-	export BUILD_DIR=$(dirname ${BIN_PATH})/jasper/SRC_MemLock/build
-	cmake -G "Unix Makefiles" -H$SOURCE_DIR -B$BUILD_DIR -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR -JAS_ENABLE_SHARED=off ..
+	cmake -G "Unix Makefiles" -JAS_ENABLE_SHARED=off -DCMAKE_INSTALL_PREFIX=$(dirname ${BIN_PATH})/jasper/SRC_MemLock/build ..
 	make
+	make install
 
 	#build AFL project
 	export AFL_PATH=${ROOT_DIR}/tool/AFL-2.52b
@@ -77,11 +75,9 @@ else
 	export CFLAGS="-g -O0 -fsanitize=address"
 	export CXXFLAGS="-g -O0 -fsanitize=address"
 	cd $(dirname ${BIN_PATH})/jasper/SRC_AFL/build
-	export SOURCE_DIR=$(dirname ${BIN_PATH})/jasper/SRC_AFL
-	export INSTALL_DIR=$(dirname ${BIN_PATH})/jasper/SRC_AFL/Build
-	export BUILD_DIR=$(dirname ${BIN_PATH})/jasper/SRC_AFL/build
-	cmake -G "Unix Makefiles" -H$SOURCE_DIR -B$BUILD_DIR -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR -JAS_ENABLE_SHARED=off ..
+	cmake -G "Unix Makefiles" -JAS_ENABLE_SHARED=off -DCMAKE_INSTALL_PREFIX=$(dirname ${BIN_PATH})/jasper/SRC_AFL/build ..
 	make
+	make install
 
 	export PATH=${PATH_SAVE}
 	export LD_LIBRARY_PATH=${LD_SAVE}
