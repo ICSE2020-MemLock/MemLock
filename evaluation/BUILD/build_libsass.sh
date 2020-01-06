@@ -73,7 +73,7 @@ else
 	if [ -d "$(dirname ${BIN_PATH})/libsass/SRC_AFL/build"  ]; then
 		rm -rf $(dirname ${BIN_PATH})/libsass/SRC_AFL/build
 	fi
-	mkdir $(dirname ${BIN_PATH})/libsass/SRC_MemLock/build
+	mkdir $(dirname ${BIN_PATH})/libsass/SRC_AFL/build
 	autoreconf --force --install
 	CC=${ROOT_DIR}/tool/AFL-2.52b/build/bin/afl-clang-fast CXX=${ROOT_DIR}/tool/AFL-2.52b/build/bin/afl-clang-fast++ CFLAGS="-g -O0 -fsanitize=address" CXXFLAGS="-g -O0 -fsanitize=address" ./configure --enable-tests --disable-shared --prefix=$(dirname ${BIN_PATH})/libsass/SRC_AFL/build
 	make
