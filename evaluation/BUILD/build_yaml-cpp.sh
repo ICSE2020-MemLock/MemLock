@@ -67,7 +67,6 @@ else
 	export CXXFLAGS="-g -O0 -fsanitize=address"
 	cmake -G "Unix Makefiles" -DBUILD_SHARED_LIBS=OFF ..
 	make
-	make install
 
 	#build AFL project
 	export AFL_PATH=${ROOT_DIR}/tool/AFL-2.52b
@@ -83,7 +82,6 @@ else
 	export CXXFLAGS="-g -O0 -fsanitize=address"
 	cmake -G "Unix Makefiles" -DBUILD_SHARED_LIBS=OFF ..
 	make
-	make install
 
 	export PATH=${PATH_SAVE}
 	export LD_LIBRARY_PATH=${LD_SAVE}
