@@ -17,8 +17,8 @@ if ! [ -d "${ROOT_DIR}/tool/MemLock/build/bin" ]; then
     ${ROOT_DIR}/tool/install_MemLock.sh
 fi
 
-export PATH=${ROOT_DIR}/clang+llvm/bin:$PATH
-export LD_LIBRARY_PATH=${ROOT_DIR}/clang+llvm/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
+export PATH=${ROOT_DIR}/clang+llvm/ua_asan/bin:$PATH
+export LD_LIBRARY_PATH=${ROOT_DIR}/clang+llvm/ua_asan/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
 export AFL_PATH=${ROOT_DIR}/tool/MemLock
 
 if ! [ $(command llvm-config --version) = "6.0.1" ]; then
@@ -28,13 +28,13 @@ if ! [ $(command llvm-config --version) = "6.0.1" ]; then
     echo "Please set:"
     echo "export PATH=$PREFIX/clang+llvm/bin:\$PATH"
     echo "export LD_LIBRARY_PATH=$PREFIX/clang+llvm/lib:\$LD_LIBRARY_PATH"
-elif ! [ -d "${ROOT_DIR}/clang+llvm"  ]; then
+elif ! [ -d "${ROOT_DIR}/clang+llvm/ua_asan/bin"  ]; then
     echo ""
     echo "You can simply run tool/build_MemLock.sh to build the environment."
     echo ""
     echo "Please set:"
-    echo "export PATH=$PREFIX/clang+llvm/bin:\$PATH"
-    echo "export LD_LIBRARY_PATH=$PREFIX/clang+llvm/lib:\$LD_LIBRARY_PATH"
+    echo "export PATH=$PREFIX/clang+llvm/ua_asan/bin:\$PATH"
+    echo "export LD_LIBRARY_PATH=$PREFIX/clang+llvm/ua_asan/lib:\$LD_LIBRARY_PATH"
 else
     echo "start ..."
     cd ${ROOT_DIR}/tests/test2

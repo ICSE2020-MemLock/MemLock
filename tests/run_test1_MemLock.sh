@@ -28,7 +28,7 @@ if ! [ $(command llvm-config --version) = "6.0.1" ]; then
     echo "Please set:"
     echo "export PATH=$PREFIX/clang+llvm/bin:\$PATH"
     echo "export LD_LIBRARY_PATH=$PREFIX/clang+llvm/lib:\$LD_LIBRARY_PATH"
-elif ! [ -d "${ROOT_DIR}/clang+llvm"  ]; then
+elif ! [ -d "${ROOT_DIR}/clang+llvm/bin"  ]; then
     echo ""
     echo "You can simply run tool/build_MemLock.sh to build the environment."
     echo ""

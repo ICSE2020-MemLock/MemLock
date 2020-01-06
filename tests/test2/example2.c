@@ -15,14 +15,14 @@ int main(int argc, char *argv[]) {
 	} else {
 		char ch;
 		while ((ch=fgetc(inputfile)) != EOF){
-			i = i + 10;
+			i = i + 1;
 			printf("%c",ch);
 		}
 		fclose(inputfile);
 	}
 	
 	//根据文件长度，分配堆内存
-	char *buf = malloc(i*sizeof(char)*1024);
+	char *buf = malloc(i*20*sizeof(char)*1024);
 	buf[0]='a';
 	free(buf);
 	
