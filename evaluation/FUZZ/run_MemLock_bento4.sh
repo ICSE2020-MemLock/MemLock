@@ -53,5 +53,5 @@ else
 		fi
 	done
 	export ASAN_OPTIONS=detect_odr_violation=0:allocator_may_return_null=0:abort_on_error=1:symbolize=0:detect_leaks=1
-	${ROOT_DIR}/tool/MemLock/build/bin/memlock-heap-fuzz -i ${ROOT_DIR}/evaluation/BUILD/bento4/SEED/ -o out_MemLock$i -m none -d --  ${ROOT_DIR}/evaluation/BUILD/bento4/SRC_MemLock/build/mp42hls @@
+	${ROOT_DIR}/tool/MemLock/build/bin/memlock-heap-fuzz -i ${ROOT_DIR}/evaluation/BUILD/bento4/SEED/ -o out_MemLock$i -m none -d -t 5000 --  ${ROOT_DIR}/evaluation/BUILD/bento4/SRC_MemLock/build/mp42hls @@
 fi

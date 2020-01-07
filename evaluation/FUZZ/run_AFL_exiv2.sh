@@ -36,22 +36,22 @@ elif ! [ -d "${ROOT_DIR}/clang+llvm/ua_asan/bin"  ]; then
 	echo "export PATH=$PREFIX/clang+llvm/ua_asan/bin:\$PATH"
 	echo "export LD_LIBRARY_PATH=$PREFIX/clang+llvm/ua_asan/lib:\$LD_LIBRARY_PATH"
 else
-	if ! [ -d "${ROOT_DIR}/evaluation/BUILD/bento4/SRC_AFL/build" ]; then
-		${ROOT_DIR}/evaluation/BUILD/build_bento4.sh
+	if ! [ -d "${ROOT_DIR}/evaluation/BUILD/exiv2/SRC_AFL/build/bin" ]; then
+		${ROOT_DIR}/evaluation/BUILD/build_exiv2.sh
 	fi
 	echo "start ..."
 	cd ${ROOT_DIR}/evaluation/FUZZ
-	if ! [ -d "${ROOT_DIR}/evaluation/FUZZ/bento4" ]; then
-		mkdir bento4
+	if ! [ -d "${ROOT_DIR}/evaluation/FUZZ/exiv2" ]; then
+		mkdir exiv2
 	fi
-	cd bento4
+	cd exiv2
 	i=0
 	for ((i=1; i<100; i++))
 	do
-		if ! [ -d "${ROOT_DIR}/evaluation/FUZZ/bento4/out_AFL$i" ]; then
+		if ! [ -d "${ROOT_DIR}/evaluation/FUZZ/exiv2/out_AFL$i" ]; then
 			break
 		fi
 	done
-	export ASAN_OPTIONS=detect_odr_violation=0:allocator_may_return_null=0:abort_on_error=1:symbolize=0:detect_leaks=1
-	${ROOT_DIR}/tool/AFL-2.52b/build/bin/afl-fuzz -i ${ROOT_DIR}/evaluation/BUILD/bento4/SEED/ -o out_AFL$i -m none -d -t 5000 --  ${ROOT_DIR}/evaluation/BUILD/bento4/SRC_AFL/build/mp42hls @@
+	export ASAN_OPTIONS=detect_odr_violation=0:allocator_may_return_null=0:abort_on_error=1:symbolize=0:detect_leaks=0
+	${ROOT_DIR}/tool/AFL-2.52b/build/bin/afl-fuzz -i ${ROOT_DIR}/evaluation/BUILD/exiv2/SEED/ -o out_AFL$i -m none -d -t 5000 --  ${ROOT_DIR}/evaluation/BUILD/exiv2/SRC_AFL/build/bin/exiv2 -pX @@
 fi
