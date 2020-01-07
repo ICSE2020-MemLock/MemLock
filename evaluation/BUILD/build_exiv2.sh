@@ -2,15 +2,15 @@
 
 # For Mac
 if [ $(command uname) = "Darwin" ]; then
-    if ! [ -x "$(command -v greadlink)"  ]; then
-        brew install coreutils
-    fi
-    BIN_PATH=$(greadlink -f "$0")
-    ROOT_DIR=$(dirname $(dirname $(dirname $BIN_PATH)))
+	if ! [ -x "$(command -v greadlink)"  ]; then
+		brew install coreutils
+	fi
+	BIN_PATH=$(greadlink -f "$0")
+	ROOT_DIR=$(dirname $(dirname $(dirname $BIN_PATH)))
 # For Linux
 else
-    BIN_PATH=$(readlink -f "$0")
-    ROOT_DIR=$(dirname $(dirname $(dirname $BIN_PATH)))
+	BIN_PATH=$(readlink -f "$0")
+	ROOT_DIR=$(dirname $(dirname $(dirname $BIN_PATH)))
 fi
 
 if ! [ -d "${ROOT_DIR}/tool/MemLock/build/bin" ]; then
@@ -44,14 +44,14 @@ elif ! [ -d "${ROOT_DIR}/clang+llvm/ua_asan/bin" ]; then
 else
 	echo "start ..."
 	cd ${ROOT_DIR}/evaluation/BUILD/exiv2
-    git clone https://github.com/Exiv2/exiv2 SRC
-    cd SRC
-    git checkout fa449a4d2c58d63f0d75ff259f25683a98a44630
-    cd ..
-    rm -rf $(dirname ${BIN_PATH})/exiv2/SRC_MemLock
-    rm -rf $(dirname ${BIN_PATH})/exiv2/SRC_AFL
-    mv $(dirname ${BIN_PATH})/exiv2/SRC $(dirname ${BIN_PATH})/exiv2/SRC_MemLock
-    cp -rf $(dirname ${BIN_PATH})/exiv2/SRC_MemLock $(dirname ${BIN_PATH})/exiv2/SRC_AFL
+	git clone https://github.com/Exiv2/exiv2 SRC
+	cd SRC
+	git checkout fa449a4d2c58d63f0d75ff259f25683a98a44630
+	cd ..
+	rm -rf $(dirname ${BIN_PATH})/exiv2/SRC_MemLock
+	rm -rf $(dirname ${BIN_PATH})/exiv2/SRC_AFL
+	mv $(dirname ${BIN_PATH})/exiv2/SRC $(dirname ${BIN_PATH})/exiv2/SRC_MemLock
+	cp -rf $(dirname ${BIN_PATH})/exiv2/SRC_MemLock $(dirname ${BIN_PATH})/exiv2/SRC_AFL
 
 	#build MemLock project
 	export AFL_PATH=${ROOT_DIR}/tool/MemLock
@@ -61,12 +61,12 @@ else
 		rm -rf $(dirname ${BIN_PATH})/exiv2/SRC_MemLock/build
 	fi
 	export CC=${ROOT_DIR}/tool/MemLock/build/bin/memlock-heap-clang
-    export CXX=${ROOT_DIR}/tool/MemLock/build/bin/memlock-heap-clang++
-    export CFLAGS="-g -O0 -fsanitize=address"
-    export CXXFLAGS="-g -O0 -fsanitize=address"
-    mkdir $(dirname ${BIN_PATH})/exiv2/SRC_MemLock/build
-    cd $(dirname ${BIN_PATH})/exiv2/SRC_MemLock/build
-    cmake .. -G "Unix Makefiles" -DEXIV2_ENABLE_SHARED=off
+	export CXX=${ROOT_DIR}/tool/MemLock/build/bin/memlock-heap-clang++
+	export CFLAGS="-g -O0 -fsanitize=address"
+	export CXXFLAGS="-g -O0 -fsanitize=address"
+	mkdir $(dirname ${BIN_PATH})/exiv2/SRC_MemLock/build
+	cd $(dirname ${BIN_PATH})/exiv2/SRC_MemLock/build
+	cmake .. -G "Unix Makefiles" -DEXIV2_ENABLE_SHARED=off -DEXIV2_ENABLE_LIBXMP=1 -DEXIV2_ENABLE_CURL=0 -DEXIV2_ENABLE_SSH=0
 	make
 
 	#build AFL project
@@ -74,15 +74,15 @@ else
 	export ASAN_OPTIONS=detect_odr_violation=0:allocator_may_return_null=0:abort_on_error=1:symbolize=0:detect_leaks=0
 	cd $(dirname ${BIN_PATH})/exiv2/SRC_AFL
 	if [ -d "$(dirname ${BIN_PATH})/exiv2/SRC_AFL/build"  ]; then
-        rm -rf $(dirname ${BIN_PATH})/exiv2/SRC_AFL/build
-    fi
-    export CC=${ROOT_DIR}/tool/AFL-2.52b/build/bin/afl-clang-fast
-    export CXX=${ROOT_DIR}/tool/AFL-2.52b/build/bin/afl-clang-fast++
-    export CFLAGS="-g -O0 -fsanitize=address"
-    export CXXFLAGS="-g -O0 -fsanitize=address"
-    mkdir $(dirname ${BIN_PATH})/exiv2/SRC_AFL/build
-    cd $(dirname ${BIN_PATH})/exiv2/SRC_AFL/build
-    cmake .. -G "Unix Makefiles" -DEXIV2_ENABLE_SHARED=off
+		rm -rf $(dirname ${BIN_PATH})/exiv2/SRC_AFL/build
+	fi
+	export CC=${ROOT_DIR}/tool/AFL-2.52b/build/bin/afl-clang-fast
+	export CXX=${ROOT_DIR}/tool/AFL-2.52b/build/bin/afl-clang-fast++
+	export CFLAGS="-g -O0 -fsanitize=address"
+	export CXXFLAGS="-g -O0 -fsanitize=address"
+	mkdir $(dirname ${BIN_PATH})/exiv2/SRC_AFL/build
+	cd $(dirname ${BIN_PATH})/exiv2/SRC_AFL/build
+	cmake .. -G "Unix Makefiles" -DEXIV2_ENABLE_SHARED=off -DEXIV2_ENABLE_LIBXMP=1 -DEXIV2_ENABLE_CURL=0 -DEXIV2_ENABLE_SSH=0
 	make
 
 	export PATH=${PATH_SAVE}
