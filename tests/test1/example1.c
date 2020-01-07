@@ -3,9 +3,8 @@
 #include <signal.h>
 
 
-int fact(int n){//递归函数
-	int a[5];
-	a[0]=1;
+int fact(int number){//递归函数
+	int n = number;
 	if (n==1 || n==0)
 		return 1;
 	return n * fact(n - 1);
@@ -30,7 +29,7 @@ int main(int argc, char *argv[]) {
 	}
 	
 	//根据文件长度，确定递归次数
-	printf("%d\n", fact(i/3));
+	printf("%d\n", fact(i));
 	
 	return 0;
 }
