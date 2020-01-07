@@ -54,5 +54,5 @@ else
 	done
 	export ASAN_OPTIONS=detect_odr_violation=0:allocator_may_return_null=1:abort_on_error=1:symbolize=0:detect_leaks=0
 	ulimit -s 4096
-	${ROOT_DIR}/tool/AFL-2.52b/build/bin/afl-fuzz -i ${ROOT_DIR}/evaluation/BUILD/flex/SEED/ -o out_AFL$i -m none -d --  ${ROOT_DIR}/evaluation/BUILD/flex/SRC_AFL/build/bin/flex @@
+	${ROOT_DIR}/tool/AFL-2.52b/build/bin/afl-fuzz -i ${ROOT_DIR}/evaluation/BUILD/flex/SEED/ -o out_AFL$i -m none -d -t 5000 -- ${ROOT_DIR}/evaluation/BUILD/flex/SRC_AFL/build/bin/flex @@
 fi

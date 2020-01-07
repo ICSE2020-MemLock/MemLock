@@ -54,5 +54,5 @@ else
 	done
 	export ASAN_OPTIONS=detect_odr_violation=0:allocator_may_return_null=1:abort_on_error=1:symbolize=0:detect_leaks=0
 	ulimit -s 4096
-	${ROOT_DIR}/tool/MemLock/build/bin/memlock-stack-fuzz -i ${ROOT_DIR}/evaluation/BUILD/flex/SEED/ -o out_MemLock$i -m none -d --  ${ROOT_DIR}/evaluation/BUILD/flex/SRC_MemLock/build/bin/flex @@
+	${ROOT_DIR}/tool/MemLock/build/bin/memlock-stack-fuzz -i ${ROOT_DIR}/evaluation/BUILD/flex/SEED/ -o out_MemLock$i -m none -d -t 5000 --  ${ROOT_DIR}/evaluation/BUILD/flex/SRC_MemLock/build/bin/flex @@
 fi
