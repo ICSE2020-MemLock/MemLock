@@ -103,7 +103,7 @@ evaluation/FUZZ/libsass
 evaluation/FUZZ/jasper
 evaluation/FUZZ/bento4
 evaluation/FUZZ/libming
-evaluation/FUZZ/openjepg
+evaluation/FUZZ/openjpeg
 evaluation/FUZZ/exiv2
 evaluation/FUZZ/yara
 evaluation/FUZZ/yaml-cpp
