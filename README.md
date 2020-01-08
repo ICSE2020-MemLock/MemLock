@@ -18,7 +18,7 @@ MemLock is built on top of the fuzzer AFL. Check out [AFL's website](http://lcam
 
 - Recommended: Ubuntu 16.04 LTS
 - Tmux, Git, Build-Essentials, Python3, Cmake, Libtool, Automake, Autoconf, Autotools, M4, Autopoint, Help2man, Bison, Flex, Texinfo, Zlib, Libexpat, Freetype: run 
-    ```shell
+    ```sh
     sudo apt install tmux git build-essential python3 cmake libtool autoamke autoconf autotools-dev m4 autopoint help2man bison flex texinfo zlib1g-dev libexpat-dev libfreetype6 libfreetype6-dev
     ```
 - Docker: see [Docker Documentation](https://docs.docker.com/install/linux/docker-ce/ubuntu/).
@@ -45,6 +45,14 @@ $ sudo docker build -t memlock ./
 # run docker image
 $ sudo docker run --cap-add=SYS_PTRACE -it memlock /bin/bash
 ```
+
+### Install MemLock fuzzer
+
+```sh
+cd tool
+./install_MemLock.sh
+```
+
 
 ## Tests
 
