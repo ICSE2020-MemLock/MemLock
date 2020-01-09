@@ -6,7 +6,13 @@
 #include <sys/ipc.h>//ipc
 #include <sys/shm.h>
 #include <unistd.h>
+
+#ifdef __APPLE__
+#include <malloc/malloc.h>
+#define malloc_usable_size malloc_size
+#else
 #include <malloc.h>
+#endif /* ^!__APPLE__ */
 
 struct sys_data
 {
