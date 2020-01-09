@@ -38,7 +38,7 @@ elif ! [ -d "${ROOT_DIR}/clang+llvm"  ]; then
 else
     echo "start ..."
     cd ${ROOT_DIR}/tests/test2
-    ${ROOT_DIR}/tool/AFL-2.52b/build/bin/afl-clang-fast -g -O0 -fsanitize=address example2.c -o example2AFL
+    ${ROOT_DIR}/tool/AFL-2.52b/build/bin/afl-clang-fast++ -g -O0 -fsanitize=address example2.c -o example2AFL
     if [ -d "${ROOT_DIR}/tests/test2/in"  ]; then
         rm -rf in
     fi

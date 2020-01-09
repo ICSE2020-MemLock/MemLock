@@ -38,7 +38,7 @@ elif ! [ -d "${ROOT_DIR}/clang+llvm/ua_asan/bin"  ]; then
 else
     echo "start ..."
     cd ${ROOT_DIR}/tests/test2
-    ${ROOT_DIR}/tool/MemLock/build/bin/memlock-heap-clang -g -O0 -fsanitize=address example2.c -o example2MemLock
+    ${ROOT_DIR}/tool/MemLock/build/bin/memlock-heap-clang++ -g -O0 -fsanitize=address example2.c -o example2MemLock
     if [ -d "${ROOT_DIR}/tests/test2/in"  ]; then
         rm -rf in
     fi

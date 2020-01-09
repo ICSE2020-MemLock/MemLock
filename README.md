@@ -31,7 +31,7 @@ git clone https://github.com/ICSE2020-MemLock/MemLock.git MemLock --depth=1
 cd MemLock
 ```
 
-### Installation using Docker
+### Build the Running Environment using Docker
 
 We recommend that you perform the installation using Docker. This will save you a lot of time to configure the environment.
 
@@ -48,27 +48,28 @@ $ sudo docker run --cap-add=SYS_PTRACE -it memlock /bin/bash
 
 ### Install MemLock fuzzer
 
+You can run the following commands to install the fuzzer tool.
+
 ```sh
 cd tool
 ./install_MemLock.sh
 ```
 
+As with AFL, system core dumps must be disabled before you perform fuzzing.
+
+```sh
+echo core|sudo tee /proc/sys/kernel/core_pattern
+echo performance|sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
+```
+
 
 ## Tests
 
-As with AFL, system core dumps must be disabled.
-
-```sh
-$ sudo su
-$ echo core >/proc/sys/kernel/core_pattern
-$ cd /sys/devices/system/cpu
-$ echo performance | tee cpu*/cpufreq/scaling_governor
-$ exit
-```
+Before you use MemLock fuzzer, you need to first use two simple examples provided by us to determine whether the Memlock fuzzer can work normally. We show two simple examples to shows how MemLock can detect excessive memory consumption and why AFL cannot detect these bugs easily. Example 1 demonstrates an uncontrolled-recursion bug and Example 2 demonstrates an uncontrolled-memory-allocation bug.
 
 ### Run for testing example 1
 
-In our experiments for testing example 1, MemLock can find crashes in a few minutes while AFL can not find any crashes.
+Example 1 demonstrates an uncontrolled-recursion bug. The function `fact()` in `example1.c` is a recursive function. With a sufficiently large recursive depth, the execution would run out of stack memory, causing stack-overflow. You can perform fuzzing on this example program by following commands.
 
 ```sh
 # enter the tests folder
@@ -81,9 +82,11 @@ $ run_test1_MemLock.sh
 $ run_test1_AFL.sh
 ```
 
+In our experiments for testing example 1, MemLock can find crashes in a few minutes while AFL can not find any crashes.
+
 ### Run for testing example 2
 
-In our experiments for testing example 2, MemLock can find crashes in a few minutes while AFL can not find any crashes.
+Example 2 demonstrates an uncontrolled-memory-allocation bug.  At line 25 in `example2.c`, the length of the user inputs is fed directly into `new []`. By carefully handcrafting the input, an adversary can provide arbitrarily large values, leading to program crash (i.e., `std::bad_alloc`) or running out of memory. You can perform fuzzing on this example program by following commands.
 
 ```sh
 # enter the tests folder
@@ -95,6 +98,9 @@ $ run_test2_MemLock.sh
 # run testing example 2 with AFL (Open another terminal)
 $ run_test2_AFL.sh
 ```
+
+In our experiments for testing example 2, MemLock can find crashes in a few minutes while AFL can not find any crashes.
+
 
 ## Evaluation
 
@@ -127,7 +133,7 @@ MemLock: Memory Usage Guided Fuzzing. IEEE/ACM 42nd International Conference on 
 @inproceedings{Wen2020MemLock,
   title={MemLock: Memory Usage Guided Fuzzing},
   author={Wen, Cheng and Wang, Haijun and Li, Yuekang and Qin, Shengchao and Liu Yang, and Xu Zhiwu, and Chen, Hongxu and Xie, Xiaofei and Pu, Geguang and Liu Ting},
-  booktitle={Proceedings of the 42nd International Conference on Software Engineering, ICSE, Seoul, South Korea},
+  booktitle={Proceedings of the 42nd International Conference on Software Engineering},
   year={2020}
 }
 ```

@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
-
+#include <iostream>
 
 int main(int argc, char *argv[]) {
     
@@ -22,9 +22,11 @@ int main(int argc, char *argv[]) {
 	}
 	
 	//根据文件长度，分配堆内存
-	char *buf = malloc(i*20*sizeof(char)*1024);
+	char *buf = new char [i*20*sizeof(char)*1024];
+	//char *buf = malloc(i*20*sizeof(char)*1024);
 	buf[0]='a';
-	free(buf);
+	delete[] buf;
+	//free(buf);
 	
 	return 0;
 }
