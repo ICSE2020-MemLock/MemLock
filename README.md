@@ -76,10 +76,10 @@ Example 1 demonstrates an uncontrolled-recursion bug. The function `fact()` in `
 $ cd tests
 
 # run testing example 1 with MemLock
-$ run_test1_MemLock.sh
+$ ./run_test1_MemLock.sh
 
 # run testing example 1 with AFL (Open another terminal)
-$ run_test1_AFL.sh
+$ ./run_test1_AFL.sh
 ```
 
 In our experiments for testing example 1, MemLock can find crashes in a few minutes while AFL can not find any crashes.
@@ -93,10 +93,10 @@ Example 2 demonstrates an uncontrolled-memory-allocation bug.  At line 25 in `ex
 $ cd tests
 
 # run testing example 2 with MemLock
-$ run_test2_MemLock.sh
+$ ./run_test2_MemLock.sh
 
 # run testing example 2 with AFL (Open another terminal)
-$ run_test2_AFL.sh
+$ ./run_test2_AFL.sh
 ```
 
 In our experiments for testing example 2, MemLock can find crashes in a few minutes while AFL can not find any crashes.
@@ -128,8 +128,6 @@ $ ./run_MemLock_cxxfilt.sh
 
 ## Publications
 ```
-MemLock: Memory Usage Guided Fuzzing. IEEE/ACM 42nd International Conference on Software Engineering, Seoul, South Korea, 23-29 May 2020.
-
 @inproceedings{Wen2020MemLock,
   title={MemLock: Memory Usage Guided Fuzzing},
   author={Wen, Cheng and Wang, Haijun and Li, Yuekang and Qin, Shengchao and Liu Yang, and Xu Zhiwu, and Chen, Hongxu and Xie, Xiaofei and Pu, Geguang and Liu Ting},
