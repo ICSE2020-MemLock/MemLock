@@ -30,6 +30,13 @@ $ cd MemLock
 
 ### Build and Run the Docker Image
 
+Firstly, system core dumps must be disabled as with AFL.
+
+```sh
+$ echo core|sudo tee /proc/sys/kernel/core_pattern
+$ echo performance|sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
+```
+
 Run the following command to automatically build the docker image and configure the environment.
 
 ```sh
@@ -43,12 +50,7 @@ $ sudo docker build -t memlock ./
 $ sudo docker run --cap-add=SYS_PTRACE -it memlock /bin/bash
 ```
 
-As with AFL, system core dumps must be disabled before you perform fuzzing.
 
-```sh
-$ echo core|sudo tee /proc/sys/kernel/core_pattern
-$ echo performance|sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
-```
 
 
 ## Tests
