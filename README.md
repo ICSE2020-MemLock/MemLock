@@ -13,19 +13,19 @@ MemLock is built on top of the fuzzer AFL. Check out [AFL's website](http://lcam
 - Strongly Recommended: Ubuntu 16.04 LTS
 - Run the following command to install Docker:
   ```sh
-  sudo apt-get install docker.io
+  $ sudo apt-get install docker.io
   ```
   (If you have any question on docker, you can see [Docker's Documentation](https://docs.docker.com/install/linux/docker-ce/ubuntu/)).
 - Run the following command to install required packages
     ```sh
-    sudo apt-get install tmux git build-essential python3 cmake libtool automake autoconf autotools-dev m4 autopoint help2man bison flex texinfo zlib1g-dev libexpat1-dev libfreetype6 libfreetype6-dev
+    $ sudo apt-get install tmux git build-essential python3 cmake libtool automake autoconf autotools-dev m4 autopoint help2man bison flex texinfo zlib1g-dev libexpat1-dev libfreetype6 libfreetype6-dev
     ```
 
 ### Clone the Repository
 
 ```sh
-git clone https://github.com/ICSE2020-MemLock/MemLock.git MemLock --depth=1
-cd MemLock
+$ git clone https://github.com/ICSE2020-MemLock/MemLock.git MemLock --depth=1
+$ cd MemLock
 ```
 
 ### Build and Run the Docker Image
@@ -46,8 +46,8 @@ $ sudo docker run --cap-add=SYS_PTRACE -it memlock /bin/bash
 As with AFL, system core dumps must be disabled before you perform fuzzing.
 
 ```sh
-echo core|sudo tee /proc/sys/kernel/core_pattern
-echo performance|sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
+$ echo core|sudo tee /proc/sys/kernel/core_pattern
+$ echo performance|sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
 ```
 
 
