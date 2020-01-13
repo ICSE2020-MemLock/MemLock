@@ -1,28 +1,25 @@
 # MemLock: Memory Usage Guided Fuzzing
 
-- **Website**: https://icse2020-memlock.github.io/
-
-- **GitHub**: https://github.com/ICSE2020-MemLock/MemLock
-
-- **Benchmark**: https://github.com/ICSE2020-MemLock/MemLock_Benchmark
-
 This repository provides the tool and the evaluation subjects for the paper "MemLock: Memory Usage Guided Fuzzing" accepted for the technical track at ICSE'2020. A pre-print of the paper can be found at [ICSE2020_MemLock.pdf](https://wcventure.github.io/pdf/ICSE2020_MemLock.pdf).
 
 The repository contains three folders: [*tool*](#tool), [*tests*](#tests) and [*evaluation*](#evaluation).
 
 ## Tool
 
-MemLock is built on top of the fuzzer AFL. Check out [AFL's website](http://lcamtuf.coredump.cx/afl/) for more information details. We provide here a snapshot of MemLock. For simplicity, we provide shell script for the whole installation. And we recommend that you use [docker image](#installation-using-docker) to build MemLock.
+MemLock is built on top of the fuzzer AFL. Check out [AFL's website](http://lcamtuf.coredump.cx/afl/) for more information details. We provide here a snapshot of MemLock. For simplicity, we provide shell script for the whole installation.
 
 ### Requirements
 
-- Recommended: Ubuntu 16.04 LTS
-- Tmux, Git, Build-Essentials, Python3, Cmake, Libtool, Automake, Autoconf, Autotools, M4, Autopoint, Help2man, Bison, Flex, Texinfo, Zlib, Libexpat, Freetype: run 
+- Strongly Recommended: Ubuntu 16.04 LTS
+- Run the following command to install Docker:
+  ```sh
+  sudo apt-get install docker.io
+  ```
+  (If you have any question on docker, you can see [Docker's Documentation](https://docs.docker.com/install/linux/docker-ce/ubuntu/)).
+- Run the following command to install required packages
     ```sh
-    sudo apt install tmux git build-essential python3 cmake libtool autoamke autoconf autotools-dev m4 autopoint help2man bison flex texinfo zlib1g-dev libexpat-dev libfreetype6 libfreetype6-dev
+    sudo apt-get install tmux git build-essential python3 cmake libtool automake autoconf autotools-dev m4 autopoint help2man bison flex texinfo zlib1g-dev libexpat1-dev libfreetype6 libfreetype6-dev
     ```
-- Docker: see [Docker Documentation](https://docs.docker.com/install/linux/docker-ce/ubuntu/).
-- clang+LLVM 6.0.1: run ` ./tool/install_llvm.sh`
 
 ### Clone the Repository
 
@@ -31,9 +28,9 @@ git clone https://github.com/ICSE2020-MemLock/MemLock.git MemLock --depth=1
 cd MemLock
 ```
 
-### Build the Running Environment using Docker
+### Build and Run the Docker Image
 
-We recommend that you perform the installation using Docker. This will save you a lot of time to configure the environment.
+Run the following command to automatically build the docker image and configure the environment.
 
 ```sh
 # disable ptrace_scope for PIN
@@ -44,15 +41,6 @@ $ sudo docker build -t memlock ./
 
 # run docker image
 $ sudo docker run --cap-add=SYS_PTRACE -it memlock /bin/bash
-```
-
-### Install MemLock fuzzer
-
-You can run the following commands to install the fuzzer tool.
-
-```sh
-cd tool
-./install_MemLock.sh
 ```
 
 As with AFL, system core dumps must be disabled before you perform fuzzing.
@@ -135,3 +123,11 @@ $ ./run_MemLock_cxxfilt.sh
   year={2020}
 }
 ```
+
+## Links
+
+- **Website**: https://icse2020-memlock.github.io/
+
+- **GitHub**: https://github.com/ICSE2020-MemLock/MemLock
+
+- **Benchmark**: https://github.com/ICSE2020-MemLock/MemLock_Benchmark
