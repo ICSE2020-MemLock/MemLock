@@ -11,5 +11,8 @@ RUN mkdir -p /workdir/MemLock
 WORKDIR /workdir/MemLock
 COPY . /workdir/MemLock
 
+ENV PATH "/workdir/MemLock/clang+llvm/bin:$PATH"
+ENV LD_LIBRARY_PATH "/workdir/MemLock/clang+llvm/lib:$LD_LIBRARY_PATH"
+
 RUN tool/install_llvm.sh
 RUN tool/install_MemLock.sh
