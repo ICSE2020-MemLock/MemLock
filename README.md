@@ -47,7 +47,7 @@ $ echo 0|sudo tee /proc/sys/kernel/yama/ptrace_scope
 $ sudo docker build -t memlock ./
 
 # run docker image
-$ sudo docker run --cap-add=SYS_PTRACE -it memlock /bin/bash
+$ sudo docker run --cap-add=SYS_PTRACE -it memlock --no-cache /bin/bash
 ```
 
 
