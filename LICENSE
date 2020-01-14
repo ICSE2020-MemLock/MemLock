@@ -1,4 +1,4 @@
-SZU License
+MIT License
 
 Copyright (c) 2020 wcventure
 
