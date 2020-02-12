@@ -52,8 +52,19 @@ $ sudo docker build -t memlock --no-cache ./
 $ sudo docker run --cap-add=SYS_PTRACE -it memlock /bin/bash
 ```
 
+### Usage
 
+The running command line is similar to AFL.
 
+To perform stack memory usage guided fuzzing, run following command line after use `memlock-stack-clang` to compile the program, as an example shown in `tests/run_test1_MemLock.sh`
+```
+tool/MemLock/build/bin/memlock-stack-fuzz -i testcase_dir -o findings_dir -d -- /path/to/program @@
+```
+
+To perform heap memory usage guided fuzzing, run following command line after use `memlock-heap-clang` to compile the program, as an example shown in `tests/run_test2_MemLock.sh`. 
+```
+tool/MemLock/build/bin/memlock-heap-fuzz -i testcase_dir -o findings_dir -d -- /path/to/program @@
+```
 
 ## Tests
 
