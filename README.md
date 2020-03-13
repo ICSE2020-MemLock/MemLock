@@ -131,11 +131,12 @@ $ ./run_MemLock_cxxfilt.sh
 
 ## Publications
 ```
-@inproceedings{Wen2020MemLock,
-  title={MemLock: Memory Usage Guided Fuzzing},
-  author={Wen, Cheng and Wang, Haijun and Li, Yuekang and Qin, Shengchao and Liu Yang, and Xu Zhiwu, and Chen, Hongxu and Xie, Xiaofei and Pu, Geguang and Liu Ting},
-  booktitle={Proceedings of the 42nd International Conference on Software Engineering},
-  year={2020}
+@inproceedings{wen2020memlock,
+Author = {Wen, Cheng and Wang, Haijun and Li, Yuekang and Qin, Shengchao and Liu, Yang, and Xu, Zhiwu and Chen, Hongxu and Xie, Xiaofei and Pu, Geguang and Liu, Ting},
+Title = {MemLock: Memory Usage Guided Fuzzing},
+Booktitle= {2020 IEEE/ACM 42nd International Conference on Software Engineering},
+Year ={2020},
+Address = {Seoul, South Korea},
 }
 ```
 
