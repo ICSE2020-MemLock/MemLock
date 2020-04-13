@@ -4,6 +4,8 @@
 
 This repository provides the tool and the evaluation subjects for the paper "MemLock: Memory Usage Guided Fuzzing" accepted for the technical track at ICSE'2020. A pre-print of the paper can be found at [ICSE2020_MemLock.pdf](https://wcventure.github.io/pdf/ICSE2020_MemLock.pdf).
 
+Note that this is the old version for the artifact evaluation in ICSE'20, not the latest version. The project is move to [another new repository](https://github.com/wcventure/MemLock-Fuzz). If you are interested, please focus on [https://github.com/wcventure/MemLock-Fuzz](https://github.com/wcventure/MemLock-Fuzz)
+
 The repository contains three folders: [*tool*](#tool), [*tests*](#tests) and [*evaluation*](#evaluation).
 
 ## Tool
@@ -26,7 +28,7 @@ MemLock is built on top of the fuzzer AFL. Check out [AFL's website](http://lcam
 ### Clone the Repository
 
 ```sh
-$ git clone https://github.com/ICSE2020-MemLock/MemLock.git MemLock --depth=1
+$ git clone https://github.com/wcventure/MemLock-Fuzz.git MemLock --depth=1
 $ cd MemLock
 ```
 
