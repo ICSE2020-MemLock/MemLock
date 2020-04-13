@@ -144,8 +144,8 @@ Address = {Seoul, South Korea},
 
 ## Links
 
-- **Website**: https://icse2020-memlock.github.io/
+- **Website**: https://wcventure.github.io/MemLock
 
-- **GitHub**: https://github.com/ICSE2020-MemLock/MemLock
+- **GitHub**: https://github.com/wcventure/MemLock-Fuzz
 
 - **Benchmark**: https://github.com/ICSE2020-MemLock/MemLock_Benchmark
