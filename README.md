@@ -144,11 +144,11 @@ Address = {Seoul, South Korea},
 
 ## Video
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/fXxx46Oj-_s" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+- [https://www.youtube.com/embed/fXxx46Oj-_s](https://www.youtube.com/embed/fXxx46Oj-_s)
 
 ## Links
 
-- **Website**: https://wcventure.github.io/MemLock
+- **Website**:: https://wcventure.github.io/MemLock
 
 - **GitHub**: https://github.com/wcventure/MemLock-Fuzz
 
