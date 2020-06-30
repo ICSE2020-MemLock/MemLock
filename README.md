@@ -142,6 +142,10 @@ Address = {Seoul, South Korea},
 }
 ```
 
+## Video
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/fXxx46Oj-_s" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 ## Links
 
 - **Website**: https://wcventure.github.io/MemLock
